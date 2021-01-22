@@ -16,7 +16,7 @@ Design a resilient distributed database to store worldwide events related to COV
 
 ## Architecture
 
-![alt text](https://github.com/ernestmajdalani//blob/main/images/Architecture.png?raw=true)
+![alt text](https://github.com/ernestmajdalani/main/images/Architecture.png?raw=true)
 
 
 ## Deployment
