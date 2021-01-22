@@ -16,7 +16,7 @@ Design a resilient distributed database to store worldwide events related to COV
 
 ## Architecture
 
-![Architecture](https://github.com/ernestmajdalani/GDELTProject/main/images/Architecture.png)
+![Architecture](images/Architecture.png)
 
 
 ## Deployment
