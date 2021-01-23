@@ -9,8 +9,8 @@ Design a resilient distributed database to store worldwide events related to COV
 In this project we aim to answer the following :
 
 + How many articles and events are related to the COVID-19 pandemic, grouped by day, country and language ?
-+ For a given country, list all events that have taken place sorted by how many times they were mentioned, grouped by _yyyy, yyyy-mm or yyyy-mm-dd.
-+ For a given source (gkg.SourceCommonName), list the average tone and number of articles associated with each theme, person and location, grouped by _yyyy, yyyy-mm or yyyy-mm-dd.
++ For a given country, list all events that have taken place sorted by how many times they were mentioned, grouped by _yyyy, yyyy-mm or yyyy-mm-dd_.
++ For a given source (gkg.SourceCommonName), list the average tone and number of articles associated with each theme, person and location, grouped by _yyyy, yyyy-mm or yyyy-mm-dd_.
 + Do we observe a pattern that could identify another pandemic wave ?
 
 ## Technologies Used
