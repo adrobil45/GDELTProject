@@ -4,7 +4,7 @@ Authors: Fabrice Pont, Morgan Fassier, Adrien Robiliard, Théo Lefièvre, Ernest
 
 ## Project Scope
 
-Design a resilient distributed database to store worldwide events related to COVID-19 that were mentioned in all media sources from the GDELT Database.
+Design a resilient distributed database to store worldwide events related to COVID-19 that were mentioned in all media sources in the year 2020 from the GDELT Database.
 
 ## Technologies Used
 
