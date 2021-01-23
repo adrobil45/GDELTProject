@@ -31,7 +31,6 @@ In this project we aim to answer the following :
 + #### Ansible
 ### Cassandra data model
 ### ETLs for data preparation
+![ETL](images/ETL.png)
 ### Writing to the Cassandra Cluster
 ### Queries
-
-TEST
