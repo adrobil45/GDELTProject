@@ -1,0 +1,810 @@
+﻿{
+  "paragraphs": [
+    {
+      "text": "import com.datastax.spark.connector.cql.CassandraConnector\nimport com.datastax.spark.connector.rdd.ReadConf\n\nval connector = CassandraConnector(sc.getConf)",
+      "user": "anonymous",
+      "dateUpdated": "2021-01-22T01:04:34+0000",
+      "config": {
+        "colWidth": 12,
+        "fontSize": 9,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "scala",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "editorMode": "ace/mode/scala"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "import com.datastax.spark.connector.cql.CassandraConnector\nimport com.datastax.spark.connector.rdd.ReadConf\n\u001b[1m\u001b[34mconnector\u001b[0m: \u001b[1m\u001b[32mcom.datastax.spark.connector.cql.CassandraConnector\u001b[0m = com.datastax.spark.connector.cql.CassandraConnector@509e0b1f\n"
+          }
+        ]
+      },
+      "apps": [],
+      "runtimeInfos": {},
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1611277318172_845184110",
+      "id": "paragraph_1611277318172_845184110",
+      "dateCreated": "2021-01-22T01:01:58+0000",
+      "dateStarted": "2021-01-22T01:04:34+0000",
+      "dateFinished": "2021-01-22T01:04:34+0000",
+      "status": "FINISHED",
+      "focus": true,
+      "$$hashKey": "object:180"
+    },
+    {
+      "text": "%md\n#### Requête 1: Nombre d’articles et évènements parlant du COVID",
+      "user": "anonymous",
+      "dateUpdated": "2021-01-22T01:06:58+0000",
+      "config": {
+        "colWidth": 12,
+        "fontSize": 9,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "text",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "editorMode": "ace/mode/text",
+        "editorHide": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "HTML",
+            "data": "<h4>Requête 1: Nombre d’articles et évènements parlant du COVID</h4>\n"
+          }
+        ]
+      },
+      "apps": [],
+      "runtimeInfos": {},
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1611277387629_104643901",
+      "id": "paragraph_1611277387629_104643901",
+      "dateCreated": "2021-01-22T01:03:07+0000",
+      "dateStarted": "2021-01-22T01:06:55+0000",
+      "dateFinished": "2021-01-22T01:06:55+0000",
+      "status": "FINISHED",
+      "$$hashKey": "object:181"
+    },
+    {
+      "text": "val Answer1 = spark.read\n                .format(\"org.apache.spark.sql.cassandra\")\n                .options(Map(\"table\" -> \"q1\", \"keyspace\" -> \"gdelt\"))\n                .load()\n                .groupBy(\"mention_date\", \"country_code\", \"language\")\n                .agg(countDistinct(\"event_id\"), countDistinct(\"mention_id\"))\n                \n\nAnswer1.orderBy(countDistinct(\"mention_id\").desc).show()",
+      "user": "anonymous",
+      "dateUpdated": "2021-01-22T01:18:20+0000",
+      "config": {
+        "colWidth": 12,
+        "fontSize": 9,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "scala",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "editorMode": "ace/mode/scala"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "+------------+------------+--------+---------------+-----------------+\n|mention_date|country_code|language|count(event_id)|count(mention_id)|\n+------------+------------+--------+---------------+-----------------+\n|  2020-03-18|          US|     eng|          10030|            31700|\n|  2020-03-20|          US|     eng|           9443|            30209|\n|  2020-03-19|          US|     eng|           9827|            30167|\n|  2020-03-26|          US|     eng|           9555|            29923|\n|  2020-04-02|          US|     eng|           9317|            29527|\n|  2020-03-25|          US|     eng|           9352|            29372|\n|  2020-04-03|          US|     eng|           8893|            29342|\n|  2020-03-27|          US|     eng|           9208|            28623|\n|  2020-03-24|          US|     eng|           9058|            28608|\n|  2020-03-31|          US|     eng|           9472|            27621|\n|  2020-04-01|          US|     eng|           9062|            27561|\n|  2020-04-08|          US|     eng|           8737|            27546|\n|  2020-03-17|          US|     eng|           9260|            27350|\n|  2020-04-07|          US|     eng|           8551|            25977|\n|  2020-04-09|          US|     eng|           8233|            25903|\n|  2020-04-14|          US|     eng|           7760|            25810|\n|  2020-04-15|          US|     eng|           8304|            25308|\n|  2020-03-23|          US|     eng|           8145|            25031|\n|  2020-04-24|          US|     eng|           7526|            24729|\n|  2020-04-22|          US|     eng|           7806|            24665|\n+------------+------------+--------+---------------+-----------------+\nonly showing top 20 rows\n\n\u001b[1m\u001b[34mAnswer1\u001b[0m: \u001b[1m\u001b[32morg.apache.spark.sql.DataFrame\u001b[0m = [mention_date: date, country_code: string ... 3 more fields]\n"
+          }
+        ]
+      },
+      "apps": [],
+      "runtimeInfos": {
+        "jobUrl": {
+          "propertyName": "jobUrl",
+          "label": "SPARK JOB",
+          "tooltip": "View in Spark web UI",
+          "group": "spark",
+          "values": [
+            {
+              "jobUrl": "http://ip-172-31-8-140.ec2.internal:4040/jobs/job?id=139",
+              "$$hashKey": "object:712"
+            },
+            {
+              "jobUrl": "http://ip-172-31-8-140.ec2.internal:4040/jobs/job?id=140",
+              "$$hashKey": "object:713"
+            },
+            {
+              "jobUrl": "http://ip-172-31-8-140.ec2.internal:4040/jobs/job?id=141",
+              "$$hashKey": "object:714"
+            }
+          ],
+          "interpreterSettingId": "spark"
+        }
+      },
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1611277562717_-1548790219",
+      "id": "paragraph_1611277562717_-1548790219",
+      "dateCreated": "2021-01-22T01:06:02+0000",
+      "dateStarted": "2021-01-22T01:18:20+0000",
+      "dateFinished": "2021-01-22T01:18:53+0000",
+      "status": "FINISHED",
+      "$$hashKey": "object:182"
+    },
+    {
+      "text": "%md\nReprésentation des 1000 évenements les plus mentionnés",
+      "user": "anonymous",
+      "dateUpdated": "2021-01-22T01:27:05+0000",
+      "config": {
+        "colWidth": 12,
+        "fontSize": 9,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "text",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "editorMode": "ace/mode/text",
+        "editorHide": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "HTML",
+            "data": "<p>Représentation des 1000 évenements les plus mentionnés</p>\n"
+          }
+        ]
+      },
+      "apps": [],
+      "runtimeInfos": {},
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1611278025496_686608129",
+      "id": "paragraph_1611278025496_686608129",
+      "dateCreated": "2021-01-22T01:13:45+0000",
+      "dateStarted": "2021-01-22T01:27:02+0000",
+      "dateFinished": "2021-01-22T01:27:02+0000",
+      "status": "FINISHED",
+      "$$hashKey": "object:183"
+    },
+    {
+      "text": "z.show(Answer1.orderBy(countDistinct(\"mention_id\").desc))",
+      "user": "anonymous",
+      "dateUpdated": "2021-01-22T01:23:59+0000",
+      "config": {
+        "colWidth": 12,
+        "fontSize": 9,
+        "enabled": true,
+        "results": {
+          "0": {
+            "graph": {
+              "mode": "pieChart",
+              "height": 300,
+              "optionOpen": false,
+              "setting": {
+                "multiBarChart": {
+                  "rotate": {
+                    "degree": "-45"
+                  },
+                  "xLabelStatus": "default"
+                },
+                "stackedAreaChart": {
+                  "rotate": {
+                    "degree": "-45"
+                  },
+                  "xLabelStatus": "default"
+                },
+                "pieChart": {}
+              },
+              "commonSetting": {},
+              "keys": [
+                {
+                  "name": "country_code",
+                  "index": 1,
+                  "aggr": "sum"
+                }
+              ],
+              "groups": [],
+              "values": [
+                {
+                  "name": "country_code",
+                  "index": 1,
+                  "aggr": "count"
+                }
+              ]
+            },
+            "helium": {}
+          }
+        },
+        "editorSetting": {
+          "language": "scala",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "editorMode": "ace/mode/scala",
+        "editorHide": false
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TABLE",
+            "data": "mention_date\tcountry_code\tlanguage\tcount(event_id)\tcount(mention_id)\n2020-03-18\tUS\teng\t10030\t31700\n2020-03-20\tUS\teng\t9443\t30209\n2020-03-19\tUS\teng\t9827\t30167\n2020-03-26\tUS\teng\t9555\t29923\n2020-04-02\tUS\teng\t9317\t29527\n2020-03-25\tUS\teng\t9352\t29372\n2020-04-03\tUS\teng\t8893\t29342\n2020-03-27\tUS\teng\t9208\t28623\n2020-03-24\tUS\teng\t9058\t28608\n2020-03-31\tUS\teng\t9472\t27621\n2020-04-01\tUS\teng\t9062\t27561\n2020-04-08\tUS\teng\t8737\t27546\n2020-03-17\tUS\teng\t9260\t27350\n2020-04-07\tUS\teng\t8551\t25977\n2020-04-09\tUS\teng\t8233\t25903\n2020-04-14\tUS\teng\t7760\t25810\n2020-04-15\tUS\teng\t8304\t25308\n2020-03-23\tUS\teng\t8145\t25031\n2020-04-24\tUS\teng\t7526\t24729\n2020-04-22\tUS\teng\t7806\t24665\n2020-04-16\tUS\teng\t7890\t24463\n2020-04-06\tUS\teng\t7390\t24072\n2020-04-23\tUS\teng\t7764\t24005\n2020-04-21\tUS\teng\t7324\t23767\n2020-04-10\tUS\teng\t7751\t23330\n2020-04-17\tUS\teng\t7640\t22814\n2020-04-29\tUS\teng\t7024\t22671\n2020-04-30\tUS\teng\t7014\t22219\n2020-04-28\tUS\teng\t7045\t21603\n2020-03-30\tUS\teng\t7375\t21598\n2020-05-06\tUS\teng\t6962\t21036\n2020-03-16\tUS\teng\t7287\t20726\n2020-05-14\tUS\teng\t6354\t20132\n2020-05-05\tUS\teng\t6694\t20091\n2020-04-13\tUS\teng\t6285\t20053\n2020-03-12\tUS\teng\t6898\t19876\n2020-04-20\tUS\teng\t6344\t19866\n2020-03-13\tUS\teng\t7968\t19838\n2020-05-07\tUS\teng\t6600\t19812\n2020-05-01\tUS\teng\t6676\t19658\n2020-05-13\tUS\teng\t6396\t19393\n2020-04-04\tUS\teng\t5740\t19359\n2020-03-28\tUS\teng\t5850\t19100\n2020-05-08\tUS\teng\t6146\t18697\n2020-05-12\tUS\teng\t6002\t18590\n2020-05-20\tUS\teng\t5648\t18349\n2020-05-21\tUS\teng\t5710\t18312\n2020-04-27\tUS\teng\t5882\t18169\n2020-05-19\tUS\teng\t5518\t17993\n2020-03-21\tUS\teng\t6057\t17752\n2020-05-04\tUS\teng\t5670\t17101\n2020-03-22\tUS\teng\t4924\t16887\n2020-04-11\tUS\teng\t4820\t16831\n2020-03-11\tUS\teng\t6041\t16773\n2020-05-27\tUS\teng\t5094\t16703\n2020-05-15\tUS\teng\t5527\t16341\n2020-05-28\tUS\teng\t5188\t16179\n2020-05-22\tUS\teng\t5113\t15968\n2020-05-11\tUS\teng\t4850\t15566\n2020-03-10\tUS\teng\t5281\t15445\n2020-07-08\tUS\teng\t4601\t15109\n2020-04-18\tUS\teng\t4921\t14751\n2020-04-05\tUS\teng\t4299\t14522\n2020-03-29\tUS\teng\t4529\t14353\n2020-07-14\tUS\teng\t4380\t14240\n2020-03-14\tUS\teng\t5276\t14026\n2020-07-07\tUS\teng\t4169\t13991\n2020-07-15\tUS\teng\t4423\t13948\n2020-07-02\tUS\teng\t4378\t13825\n2020-07-09\tUS\teng\t4429\t13745\n2020-06-23\tUS\teng\t4026\t13548\n2020-04-25\tUS\teng\t4358\t13505\n2020-05-29\tUS\teng\t4663\t13401\n2020-07-22\tUS\teng\t4164\t13338\n2020-10-02\tUS\teng\t3496\t13267\n2020-06-26\tUS\teng\t4217\t13213\n2020-05-18\tUS\teng\t4605\t13148\n2020-07-23\tUS\teng\t4239\t13110\n2020-06-30\tUS\teng\t4220\t13061\n2020-07-01\tUS\teng\t4410\t13046\n2020-07-16\tUS\teng\t4314\t13041\n2020-05-26\tUS\teng\t4319\t13026\n2020-03-15\tUS\teng\t4223\t12993\n2020-06-04\tUS\teng\t4279\t12989\n2020-06-24\tUS\teng\t4125\t12961\n2020-06-25\tUS\teng\t4194\t12672\n2020-07-29\tUS\teng\t3962\t12559\n2020-07-30\tUS\teng\t4019\t12527\n2020-05-09\tUS\teng\t3800\t12504\n2020-06-03\tUS\teng\t4391\t12333\n2020-06-11\tUS\teng\t3893\t12224\n2020-05-02\tUS\teng\t4017\t12148\n2020-08-11\tUS\teng\t3618\t12110\n2020-07-28\tUS\teng\t3946\t12097\n2020-03-09\tUS\teng\t3910\t12029\n2020-07-13\tUS\teng\t3528\t11931\n2020-04-12\tUS\teng\t3838\t11859\n2020-07-24\tUS\teng\t3840\t11832\n2020-08-05\tUS\teng\t3756\t11806\n2020-08-18\tUS\teng\t3370\t11796\n2020-03-06\tUS\teng\t3685\t11759\n2020-07-10\tUS\teng\t4081\t11758\n2020-07-17\tUS\teng\t4142\t11674\n2020-07-21\tUS\teng\t3948\t11671\n2020-06-18\tUS\teng\t3896\t11650\n2020-06-05\tUS\teng\t3977\t11598\n2020-06-02\tUS\teng\t4113\t11595\n2020-04-19\tUS\teng\t3769\t11393\n2020-06-01\tUS\teng\t3575\t11209\n2020-08-06\tUS\teng\t3836\t11143\n2020-08-20\tUS\teng\t3428\t11133\n2020-06-12\tUS\teng\t3947\t11090\n2020-05-10\tUS\teng\t2921\t11087\n2020-08-04\tUS\teng\t3598\t10982\n2020-08-21\tUS\teng\t3223\t10820\n2020-08-13\tUS\teng\t3556\t10818\n2020-05-16\tUS\teng\t3488\t10802\n2020-04-26\tUS\teng\t3383\t10721\n2020-06-16\tUS\teng\t3783\t10689\n2020-06-17\tUS\teng\t3821\t10687\n2020-09-03\tUS\teng\t3303\t10675\n2020-07-20\tUS\teng\t3276\t10559\n2020-07-31\tUS\teng\t3717\t10534\n2020-08-19\tUS\teng\t3486\t10510\n2020-07-03\tUS\teng\t3203\t10506\n2020-08-12\tUS\teng\t3499\t10455\n2020-06-10\tUS\teng\t3823\t10400\n2020-06-19\tUS\teng\t3703\t10390\n2020-09-02\tUS\teng\t3235\t10348\n2020-06-09\tUS\teng\t3658\t10312\n2020-07-06\tUS\teng\t3233\t10278\n2020-11-20\tUS\teng\t3083\t10094\n2020-11-18\tUS\teng\t3366\t10083\n2020-03-05\tUS\teng\t3445\t10079\n2020-01-31\tCH\teng\t2740\t10073\n2020-08-28\tUS\teng\t2947\t10029\n2020-05-03\tUS\teng\t3167\t10029\n2020-08-25\tUS\teng\t3275\t9993\n2020-06-22\tUS\teng\t3142\t9871\n2020-08-07\tUS\teng\t3703\t9855\n2020-12-03\tUS\teng\t2782\t9850\n2020-06-29\tUS\teng\t3406\t9844\n2020-01-30\tCH\teng\t2473\t9830\n2020-08-14\tUS\teng\t3267\t9758\n2020-11-19\tUS\teng\t3258\t9751\n2020-12-04\tUS\teng\t2728\t9738\n2020-10-08\tUS\teng\t2936\t9722\n2020-09-11\tUS\teng\t3009\t9667\n2020-08-27\tUS\teng\t3043\t9599\n2020-09-10\tUS\teng\t3224\t9529\n2020-07-27\tUS\teng\t3124\t9513\n2020-05-23\tUS\teng\t3152\t9508\n2020-06-08\tUS\teng\t3186\t9174\n2020-08-26\tUS\teng\t3155\t9125\n2020-09-09\tUS\teng\t3051\t9085\n2020-08-24\tUS\teng\t2718\t9058\n2020-09-23\tUS\teng\t3007\t9051\n2020-09-16\tUS\teng\t3002\t9043\n2020-09-18\tUS\teng\t3039\t8998\n2020-10-06\tUS\teng\t2672\t8979\n2020-07-11\tUS\teng\t2535\t8970\n2020-12-21\tUS\teng\t2279\t8894\n2020-05-30\tUS\teng\t2777\t8869\n2020-09-17\tUS\teng\t3145\t8803\n2020-12-18\tUS\teng\t2528\t8791\n2020-08-17\tUS\teng\t2814\t8714\n2020-11-24\tUS\teng\t2712\t8686\n2020-08-10\tUS\teng\t2910\t8663\n2020-12-07\tUS\teng\t2303\t8603\n2020-12-15\tUS\teng\t2711\t8559\n2020-12-10\tUS\teng\t2545\t8532\n2020-03-07\tUS\teng\t2570\t8528\n2020-06-27\tUS\teng\t2599\t8522\n2020-03-03\tUS\teng\t3207\t8518\n2020-01-29\tCH\teng\t2361\t8489\n2020-09-15\tUS\teng\t2824\t8456\n2020-09-22\tUS\teng\t2859\t8412\n2020-12-08\tUS\teng\t2756\t8384\n2020-12-16\tUS\teng\t2621\t8357\n2020-04-06\tUK\teng\t1882\t8321\n2020-07-04\tUS\teng\t2164\t8286\n2020-08-03\tUS\teng\t3072\t8276\n2020-12-22\tUS\teng\t2721\t8251\n2020-10-05\tUS\teng\t2247\t8232\n2020-12-17\tUS\teng\t2657\t8225\n2020-03-04\tUS\teng\t3049\t8222\n2020-12-02\tUS\teng\t2714\t8214\n2020-09-24\tUS\teng\t2740\t8182\n2020-05-25\tUS\teng\t2759\t8182\n2020-02-04\tCH\teng\t2433\t8157\n2020-12-01\tUS\teng\t2512\t8127\n2020-06-15\tUS\teng\t2853\t8126\n2020-07-25\tUS\teng\t2279\t8096\n2020-12-21\tUK\teng\t1618\t8073\n2020-02-03\tCH\teng\t2375\t8019\n2020-03-25\tUK\teng\t2035\t8012\n2020-01-28\tCH\teng\t2170\t7997\n2020-09-01\tUS\teng\t2907\t7937\n2020-09-04\tUS\teng\t2870\t7930\n2020-05-17\tUS\teng\t2659\t7895\n2020-06-13\tUS\teng\t2222\t7883\n2020-06-21\tUS\teng\t1831\t7865\n2020-12-09\tUS\teng\t2700\t7723\n2020-11-25\tUS\teng\t2721\t7721\n2020-12-23\tUS\teng\t2621\t7542\n2020-03-08\tUS\teng\t2128\t7481\n2020-02-27\tUS\teng\t2147\t7440\n2020-03-26\tUK\teng\t1986\t7435\n2020-12-11\tUS\teng\t2459\t7427\n2020-12-14\tUS\teng\t2367\t7406\n2020-02-05\tCH\teng\t2394\t7367\n2020-05-24\tUS\teng\t2451\t7358\n2020-03-19\tUK\teng\t1888\t7348\n2020-06-06\tUS\teng\t2495\t7343\n2020-02-07\tCH\teng\t2156\t7335\n2020-03-02\tUS\teng\t2371\t7310\n2020-12-24\tUS\teng\t2039\t7302\n2020-09-29\tUS\teng\t2579\t7232\n2020-12-30\tUS\teng\t2335\t7206\n2020-07-18\tUS\teng\t2289\t7142\n2020-08-01\tUS\teng\t2158\t7134\n2020-10-01\tUS\teng\t2678\t7130\n2020-07-12\tUS\teng\t1945\t7074\n2020-08-08\tUS\teng\t2095\t7073\n2020-06-20\tUS\teng\t2177\t7027\n2020-06-28\tUS\teng\t1945\t7018\n2020-05-31\tUS\teng\t2185\t6955\n2020-10-07\tUS\teng\t2436\t6953\n2020-04-07\tUK\teng\t1983\t6938\n2020-03-24\tUK\teng\t1873\t6937\n2020-04-01\tUK\teng\t1906\t6932\n2020-08-31\tUS\teng\t2437\t6932\n2020-09-08\tUS\teng\t2528\t6920\n2020-07-19\tUS\teng\t1813\t6917\n2020-03-23\tUK\teng\t1790\t6868\n2020-03-20\tUK\teng\t1759\t6810\n2020-09-14\tUS\teng\t2418\t6789\n2020-11-23\tUS\teng\t2315\t6768\n2020-03-18\tUK\teng\t2069\t6702\n2020-10-14\tUS\teng\t2356\t6700\n2020-03-27\tUK\teng\t1930\t6693\n2020-07-05\tUS\teng\t1919\t6623\n2020-03-17\tUK\teng\t1848\t6588\n2020-09-25\tUS\teng\t2348\t6554\n2020-11-30\tUS\teng\t1929\t6487\n2020-02-28\tUS\teng\t2205\t6486\n2020-02-06\tCH\teng\t2170\t6466\n2020-06-07\tUS\teng\t1894\t6441\n2020-02-29\tUS\teng\t1741\t6431\n2020-12-31\tUS\teng\t2192\t6422\n2020-04-02\tUK\teng\t1859\t6420\n2020-12-19\tUS\teng\t1767\t6368\n2020-04-08\tUK\teng\t1776\t6321\n2020-09-30\tUS\teng\t2573\t6283\n2020-09-21\tUS\teng\t2264\t6272\n2020-04-15\tCH\teng\t1656\t6198\n2020-03-19\tCH\teng\t1887\t6187\n2020-10-09\tUS\teng\t2118\t6129\n2020-02-02\tCH\teng\t1562\t6065\n2020-04-09\tUK\teng\t1686\t6026\n2020-04-03\tUK\teng\t1869\t5980\n2020-03-31\tUK\teng\t1785\t5943\n2020-02-01\tCH\teng\t1691\t5922\n2020-01-27\tCH\teng\t1643\t5915\n2020-10-13\tUS\teng\t2120\t5882\n2020-11-04\tUS\teng\t1934\t5876\n2020-08-15\tUS\teng\t1983\t5855\n2020-02-11\tCH\teng\t1831\t5834\n2020-03-30\tUK\teng\t1802\t5818\n2020-01-24\tCH\teng\t1336\t5814\n2020-02-27\tCH\teng\t1920\t5808\n2020-12-29\tUS\teng\t2094\t5722\n2020-08-22\tUS\teng\t1852\t5710\n2020-02-13\tCH\teng\t1852\t5685\n2020-03-27\tCH\teng\t1655\t5662\n2020-08-09\tUS\teng\t1615\t5651\n2020-02-28\tCH\teng\t1907\t5634\n2020-04-05\tUK\teng\t1087\t5624\n2020-10-03\tUS\teng\t1749\t5606\n2020-07-26\tUS\teng\t1665\t5586\n2020-12-05\tUS\teng\t1704\t5568\n2020-11-26\tUS\teng\t1820\t5543\n2020-09-12\tUS\teng\t1723\t5536\n2020-03-16\tUK\teng\t1553\t5532\n2020-12-12\tUS\teng\t1653\t5530\n2020-03-18\tCH\teng\t1757\t5527\n2020-08-02\tUS\teng\t1676\t5513\n2020-10-10\tUS\teng\t1869\t5460\n2020-11-21\tUS\teng\t1904\t5456\n2020-04-10\tUK\teng\t1342\t5453\n2020-03-20\tCH\teng\t1657\t5449\n2020-12-30\tUK\teng\t1012\t5408\n2020-12-22\tUK\teng\t1388\t5355\n2020-03-29\tUK\teng\t1168\t5340\n2020-03-05\tCH\teng\t1829\t5336\n2020-06-14\tUS\teng\t1681\t5282\n2020-03-12\tCH\teng\t1785\t5269\n2020-03-04\tCH\teng\t1719\t5232\n2020-02-26\tCH\teng\t1702\t5220\n2020-09-28\tUS\teng\t1913\t5219\n2020-04-14\tUK\teng\t1493\t5218\n2020-04-13\tUK\teng\t1278\t5180\n2020-04-12\tUK\teng\t1117\t5179\n2020-10-15\tUS\teng\t1797\t5176\n2020-02-21\tCH\teng\t1417\t5170\n2020-04-22\tUK\teng\t1592\t5153\n2020-03-02\tCH\teng\t1655\t5135\n2020-03-10\tCH\teng\t1602\t5127\n2020-09-07\tUS\teng\t1647\t5121\n2020-02-10\tCH\teng\t1699\t5117\n2020-12-06\tUS\teng\t1256\t5107\n2020-03-12\tUK\teng\t1460\t5067\n2020-04-21\tUK\teng\t1544\t5067\n2020-03-24\tCH\teng\t1667\t5059\n2020-04-29\tUK\teng\t1461\t5042\n2020-01-26\tCH\teng\t1033\t5041\n2020-04-23\tUK\teng\t1590\t5025\n2020-08-29\tUS\teng\t1757\t5021\n2020-12-28\tUS\teng\t1614\t5005\n2020-02-08\tCH\teng\t1315\t4975\n2020-03-03\tCH\teng\t1790\t4933\n2020-02-26\tUS\teng\t1431\t4911\n2020-02-14\tCH\teng\t1483\t4904\n2020-04-02\tCH\teng\t1501\t4879\n2020-08-23\tUS\teng\t1504\t4877\n2020-04-15\tUK\teng\t1530\t4866\n2020-11-22\tUS\teng\t1480\t4843\n2020-03-11\tCH\teng\t1564\t4815\n2020-02-18\tCH\teng\t1556\t4799\n2020-03-17\tCH\teng\t1662\t4781\n2020-10-19\tUS\teng\t1662\t4774\n2020-05-06\tUK\teng\t1362\t4756\n2020-11-02\tUS\teng\t1584\t4743\n2020-08-16\tUS\teng\t1546\t4731\n2020-03-13\tCH\teng\t1662\t4729\n2020-02-12\tCH\teng\t1660\t4720\n2020-10-26\tUS\teng\t1459\t4704\n2020-04-16\tUK\teng\t1640\t4685\n2020-10-21\tUS\teng\t1855\t4684\n2020-10-20\tUS\teng\t1885\t4678\n2020-03-01\tUS\teng\t1316\t4652\n2020-12-20\tUK\teng\t808\t4645\n2020-05-05\tUK\teng\t1433\t4643\n2020-04-17\tCH\teng\t1433\t4642\n2020-04-20\tUK\teng\t1544\t4641\n2020-04-17\tUK\teng\t1555\t4638\n2020-03-15\tUK\teng\t919\t4636\n2020-04-11\tUK\teng\t1006\t4630\n2020-05-18\tCH\teng\t1057\t4611\n2020-04-16\tCH\teng\t1473\t4593\n2020-04-08\tCH\teng\t1535\t4575\n2020-12-20\tUS\teng\t1255\t4566\n2020-04-24\tUK\teng\t1499\t4532\n2020-04-04\tUK\teng\t1082\t4463\n2020-03-06\tCH\teng\t1678\t4435\n2020-02-20\tCH\teng\t1409\t4411\n2020-01-23\tCH\teng\t1089\t4386\n2020-04-14\tCH\teng\t1467\t4380\n2020-12-23\tUK\teng\t1143\t4373\n2020-11-27\tUS\teng\t1472\t4360\n2020-09-19\tUS\teng\t1588\t4352\n2020-05-22\tUK\teng\t1162\t4297\n2020-06-05\tUK\teng\t1169\t4265\n2020-09-13\tUS\teng\t1341\t4265\n2020-03-23\tCH\teng\t1500\t4246\n2020-03-26\tCH\teng\t1638\t4222\n2020-04-22\tCH\teng\t1401\t4208\n2020-01-25\tCH\teng\t918\t4166\n2020-10-28\tUS\teng\t1745\t4159\n2020-12-08\tUK\teng\t887\t4146\n2020-03-28\tUK\teng\t1140\t4138\n2020-11-09\tUS\teng\t1372\t4133\n2020-10-12\tUS\teng\t1703\t4131\n2020-02-25\tCH\teng\t1390\t4128\n2020-06-16\tUK\teng\t1043\t4124\n2020-05-04\tUK\teng\t1311\t4097\n2020-01-31\tUS\teng\t1198\t4091\n2020-03-21\tUK\teng\t1077\t4086\n2020-09-05\tUS\teng\t1617\t4069\n2020-06-03\tUK\teng\t1211\t4061\n2020-04-07\tCH\teng\t1406\t4057\n2020-10-04\tUS\teng\t1317\t4051\n2020-10-22\tUS\teng\t1577\t4021\n2020-02-29\tCH\teng\t1200\t4014\n2020-04-03\tCH\teng\t1374\t3973\n2020-12-02\tUK\teng\t842\t3966\n2020-12-15\tUK\teng\t767\t3963\n2020-03-10\tIT\teng\t1194\t3959\n2020-05-07\tUK\teng\t1327\t3941\n2020-06-07\tUK\teng\t722\t3924\n2020-09-06\tUS\teng\t1302\t3923\n2020-04-27\tUK\teng\t1420\t3906\n2020-04-28\tUK\teng\t1404\t3904\n2020-03-25\tCH\teng\t1517\t3885\n2020-05-21\tUK\teng\t1248\t3873\n2020-04-29\tCH\teng\t1150\t3872\n2020-03-22\tUK\teng\t1020\t3863\n2020-10-27\tUS\teng\t1485\t3862\n2020-02-09\tCH\teng\t1121\t3846\n2020-12-16\tUK\teng\t741\t3843\n2020-05-12\tUK\teng\t1330\t3842\n2020-10-18\tUS\teng\t1244\t3837\n2020-01-22\tCH\teng\t808\t3831\n2020-01-30\tUS\teng\t993\t3809\n2020-05-28\tUK\teng\t1038\t3808\n2020-04-30\tUK\teng\t1401\t3806\n2020-12-19\tUK\teng\t542\t3802\n2020-03-22\tCH\teng\t950\t3801\n2020-05-19\tCH\teng\t1096\t3787\n2020-10-11\tUS\teng\t1316\t3770\n2020-05-04\tCH\teng\t1048\t3768\n2020-05-27\tUK\teng\t1062\t3764\n2020-04-19\tUK\teng\t885\t3749\n2020-06-30\tUK\teng\t1097\t3720\n2020-04-01\tCH\teng\t1431\t3715\n2020-12-25\tUS\teng\t1069\t3710\n2020-02-15\tCH\teng\t991\t3683\n2020-04-21\tCH\teng\t1229\t3671\n2020-06-29\tUK\teng\t964\t3670\n2020-11-28\tUS\teng\t1186\t3665\n2020-05-19\tUK\teng\t1244\t3656\n2020-04-06\tCH\teng\t1182\t3645\n2020-08-30\tUS\teng\t1304\t3641\n2020-03-01\tCH\teng\t903\t3636\n2020-03-31\tCH\teng\t1405\t3630\n2020-05-11\tUK\teng\t1153\t3628\n2020-05-21\tCH\teng\t956\t3626\n2020-03-02\tIT\teng\t908\t3622\n2020-04-13\tCH\teng\t1180\t3621\n2020-12-27\tUS\teng\t1064\t3621\n2020-05-01\tCH\teng\t1089\t3619\n2020-02-24\tCH\teng\t1268\t3618\n2020-05-14\tUK\teng\t1165\t3602\n2020-07-02\tUK\teng\t1029\t3595\n2020-05-01\tUK\teng\t1304\t3595\n2020-01-29\tUS\teng\t1006\t3589\n2020-03-09\tCH\teng\t1364\t3581\n2020-12-13\tUS\teng\t1148\t3579\n2020-04-09\tCH\teng\t1426\t3573\n2020-05-18\tUK\teng\t1151\t3570\n2020-05-15\tUK\teng\t1099\t3569\n2020-09-21\tUK\teng\t785\t3540\n2020-03-22\tIT\teng\t659\t3532\n2020-03-30\tCH\teng\t1367\t3511\n2020-06-04\tUK\teng\t1137\t3510\n2020-12-14\tUK\teng\t740\t3507\n2020-04-18\tUK\teng\t955\t3494\n2020-03-09\tIT\teng\t1074\t3493\n2020-06-18\tCH\teng\t770\t3487\n2020-03-12\tIT\teng\t1070\t3480\n2020-02-19\tCH\teng\t1386\t3471\n2020-05-13\tCH\teng\t1030\t3465\n2020-05-13\tUK\teng\t1264\t3459\n2020-07-14\tUK\teng\t1033\t3452\n2020-02-17\tCH\teng\t1281\t3447\n2020-12-31\tUK\teng\t784\t3442\n2020-06-12\tUK\teng\t1012\t3437\n2020-03-18\tCA\teng\t970\t3434\n2020-09-22\tUK\teng\t939\t3415\n2020-04-20\tCH\teng\t1188\t3411\n2020-10-23\tUS\teng\t1451\t3410\n2020-09-26\tUS\teng\t1266\t3406\n2020-03-07\tCH\teng\t916\t3405\n2020-03-29\tCH\teng\t939\t3384\n2020-05-05\tCH\teng\t1072\t3384\n2020-06-08\tUK\teng\t1035\t3380\n2020-12-24\tUK\teng\t824\t3379\n2020-04-30\tCH\teng\t1103\t3376\n2020-11-29\tUS\teng\t1083\t3368\n2020-03-05\tUK\teng\t912\t3366\n2020-05-08\tUK\teng\t1079\t3365\n2020-09-24\tUK\teng\t902\t3364\n2020-03-11\tIT\teng\t1147\t3353\n2020-03-14\tCH\teng\t1060\t3349\n2020-03-16\tCH\teng\t1338\t3346\n2020-12-17\tUK\teng\t752\t3330\n2020-05-20\tUK\teng\t1106\t3321\n2020-06-17\tUK\teng\t974\t3304\n2020-05-22\tCH\teng\t941\t3298\n2020-10-29\tUS\teng\t1253\t3275\n2020-04-23\tCH\teng\t1281\t3275\n2020-03-19\tIT\teng\t870\t3245\n2020-03-06\tUK\teng\t818\t3243\n2020-03-01\tIT\teng\t608\t3241\n2020-06-18\tUK\teng\t935\t3240\n2020-03-05\tIT\teng\t938\t3234\n2020-12-03\tUK\teng\t772\t3232\n2020-11-25\tUK\teng\t761\t3231\n2020-07-08\tUK\teng\t943\t3229\n2020-09-27\tUS\teng\t1222\t3228\n2020-03-11\tUK\teng\t1100\t3189\n2020-03-13\tUK\teng\t1278\t3187\n2020-06-15\tUK\teng\t932\t3181\n2020-04-26\tUK\teng\t813\t3180\n2020-07-01\tUK\teng\t1058\t3164\n2020-06-10\tUK\teng\t1030\t3151\n2020-05-15\tCH\teng\t970\t3123\n2020-06-02\tUK\teng\t1023\t3119\n2020-03-04\tIT\teng\t1012\t3117\n2020-07-07\tUK\teng\t912\t3111\n2020-03-28\tCH\teng\t957\t3109\n2020-06-01\tUK\teng\t983\t3095\n2020-03-21\tCH\teng\t1045\t3078\n2020-02-26\tIT\teng\t741\t3074\n2020-11-03\tUS\teng\t1108\t3068\n2020-10-17\tUS\teng\t1197\t3068\n2020-01-21\tCH\teng\t579\t3066\n2020-03-24\tAS\teng\t699\t3055\n2020-04-10\tCH\teng\t1215\t3049\n2020-04-25\tUK\teng\t839\t3049\n2020-10-02\tUK\teng\t908\t3044\n2020-06-17\tCH\teng\t746\t3039\n2020-07-09\tUK\teng\t818\t3026\n2020-06-09\tUK\teng\t1013\t3016\n2020-12-29\tUK\teng\t671\t2994\n2020-04-04\tCH\teng\t915\t2992\n2020-12-26\tUS\teng\t965\t2991\n2020-05-20\tCH\teng\t931\t2988\n2020-10-25\tUS\teng\t1091\t2981\n2020-03-26\tAS\teng\t748\t2980\n2020-04-28\tCH\teng\t1089\t2971\n2020-03-18\tIT\teng\t911\t2967\n2020-09-20\tUS\teng\t1148\t2966\n2020-11-10\tUS\teng\t1356\t2940\n2020-02-01\tUS\teng\t720\t2929\n2020-11-26\tUK\teng\t717\t2926\n2020-05-06\tCH\teng\t1105\t2926\n2020-05-12\tCH\teng\t1033\t2920\n2020-09-09\tUK\teng\t918\t2916\n2020-09-08\tUK\teng\t812\t2895\n2020-05-07\tCH\teng\t1029\t2893\n2020-03-17\tCA\teng\t801\t2879\n2020-06-24\tUK\teng\t827\t2876\n2020-03-18\tAS\teng\t781\t2872\n2020-06-25\tUK\teng\t895\t2864\n2020-02-28\tIT\teng\t752\t2860\n2020-03-14\tUK\teng\t856\t2854\n2020-05-26\tUK\teng\t1043\t2850\n2020-08-24\tUK\teng\t690\t2847\n2020-03-17\tAS\teng\t716\t2844\n2020-12-28\tUK\teng\t659\t2842\n2020-03-19\tAS\teng\t727\t2841\n2020-03-23\tIT\teng\t821\t2838\n2020-09-10\tUK\teng\t778\t2830\n2020-05-11\tCH\teng\t920\t2826\n2020-07-30\tUK\teng\t834\t2816\n2020-07-03\tUK\teng\t934\t2815\n2020-12-10\tUK\teng\t716\t2809\n2020-03-04\tUK\teng\t787\t2807\n2020-02-16\tCH\teng\t841\t2803\n2020-03-16\tIT\teng\t810\t2797\n2020-07-15\tUK\teng\t838\t2789\n2020-07-27\tUK\teng\t855\t2783\n2020-03-25\tAS\teng\t761\t2782\n2020-05-14\tCH\teng\t969\t2781\n2020-03-23\tAS\teng\t684\t2772\n2020-11-24\tUK\teng\t743\t2766\n2020-12-25\tUK\teng\t570\t2762\n2020-03-31\tAS\teng\t737\t2757\n2020-03-08\tCH\teng\t840\t2757\n2020-07-06\tUK\teng\t860\t2753\n2020-04-24\tCH\teng\t1111\t2740\n2020-03-25\tIN\teng\t1307\t2734\n2020-04-18\tCH\teng\t925\t2731\n2020-05-25\tUK\teng\t829\t2730\n2020-07-22\tCH\teng\t728\t2729\n2020-11-05\tUS\teng\t1170\t2725\n2020-09-16\tUK\teng\t762\t2724\n2020-04-27\tCH\teng\t1070\t2717\n2020-09-11\tUK\teng\t712\t2716\n2020-03-30\tAS\teng\t711\t2716\n2020-03-13\tIT\teng\t1017\t2715\n2020-05-09\tCH\teng\t626\t2714\n2020-05-23\tUK\teng\t704\t2714\n2020-03-06\tIT\teng\t859\t2711\n2020-07-17\tUK\teng\t833\t2710\n2020-02-04\tUS\teng\t842\t2708\n2020-06-11\tUK\teng\t957\t2707\n2020-09-04\tUK\teng\t772\t2701\n2020-02-07\tUS\teng\t841\t2681\n2020-09-18\tUK\teng\t781\t2680\n2020-04-05\tCH\teng\t846\t2679\n2020-11-28\tUK\teng\t423\t2679\n2020-07-29\tUK\teng\t848\t2672\n2020-03-20\tIT\teng\t879\t2672\n2020-12-09\tUK\teng\t772\t2671\n2020-12-12\tUK\teng\t465\t2670\n2020-07-16\tUK\teng\t955\t2662\n2020-05-03\tUK\teng\t746\t2654\n2020-03-02\tIR\teng\t631\t2653\n2020-03-26\tIT\teng\t777\t2652\n2020-09-25\tUK\teng\t778\t2640\n2020-03-08\tIT\teng\t626\t2633\n2020-06-19\tUK\teng\t880\t2626\n2020-03-27\tIT\teng\t796\t2622\n2020-09-07\tUK\teng\t741\t2621\n2020-07-10\tUK\teng\t723\t2620\n2020-08-13\tUK\teng\t765\t2619\n2020-05-08\tCH\teng\t943\t2617\n2020-07-20\tUK\teng\t870\t2617\n2020-03-03\tIT\teng\t916\t2615\n2020-10-15\tUK\teng\t698\t2602\n2020-04-01\tIN\teng\t1322\t2588\n2020-11-30\tUK\teng\t635\t2583\n2020-03-17\tIT\teng\t821\t2581\n2020-11-19\tUK\teng\t649\t2580\n2020-07-13\tUK\teng\t823\t2575\n2020-03-19\tCA\teng\t818\t2573\n2020-03-26\tIN\teng\t1309\t2572\n2020-05-17\tUK\teng\t702\t2571\n2020-05-29\tUK\teng\t944\t2571\n2020-05-27\tCH\teng\t834\t2555\n2020-03-10\tUK\teng\t856\t2553\n2020-09-23\tUK\teng\t827\t2552\n2020-03-24\tIT\teng\t813\t2552\n2020-03-24\tIN\teng\t1242\t2552\n2020-05-24\tUK\teng\t713\t2546\n2020-12-11\tUK\teng\t634\t2543\n2020-09-17\tUK\teng\t798\t2535\n2020-07-24\tUK\teng\t820\t2534\n2020-02-22\tCH\teng\t769\t2517\n2020-04-09\tIN\teng\t1222\t2506\n2020-08-14\tUK\teng\t798\t2506\n2020-07-21\tUK\teng\t819\t2494\n2020-11-23\tUK\teng\t694\t2472\n2020-01-28\tUS\teng\t791\t2465\n2020-09-01\tUK\teng\t751\t2460\n2020-11-17\tUS\teng\t1022\t2460\n2020-11-18\tUK\teng\t692\t2457\n2020-03-02\tUK\teng\t591\t2451\n2020-03-01\tIR\teng\t456\t2449\n2020-03-15\tCH\teng\t885\t2449\n2020-06-06\tUK\teng\t618\t2446\n2020-07-23\tUK\teng\t889\t2443\n2020-02-27\tIT\teng\t801\t2438\n2020-06-19\tCH\teng\t717\t2433\n2020-09-30\tUK\teng\t702\t2429\n2020-07-28\tUK\teng\t852\t2421\n2020-12-21\tFR\teng\t361\t2418\n2020-06-23\tUK\teng\t844\t2413\n2020-09-14\tUK\teng\t698\t2408\n2020-02-25\tUS\teng\t851\t2402\n2020-02-17\tUS\teng\t611\t2400\n2020-02-17\tJA\teng\t436\t2396\n2020-10-01\tUK\teng\t804\t2394\n2020-04-03\tIN\teng\t1234\t2374\n2020-04-10\tIN\teng\t1068\t2364\n2020-04-19\tCH\teng\t839\t2362\n2020-06-26\tUK\teng\t851\t2347\n2020-03-31\tIN\teng\t1333\t2345\n2020-09-15\tUK\teng\t766\t2345\n2020-03-07\tIT\teng\t562\t2334\n2020-11-20\tUK\teng\t683\t2332\n2020-04-02\tAS\teng\t689\t2326\n2020-03-13\tCA\teng\t797\t2326\n2020-05-10\tUK\teng\t727\t2316\n2020-04-01\tAS\teng\t716\t2315\n2020-03-03\tUK\teng\t723\t2312\n2020-10-05\tUK\teng\t725\t2311\n2020-03-20\tCA\teng\t717\t2301\n2020-03-29\tIT\teng\t462\t2291\n2020-08-05\tUK\teng\t722\t2287\n2020-02-05\tUS\teng\t886\t2287\n2020-08-11\tUK\teng\t713\t2285\n2020-04-07\tIN\teng\t1249\t2278\n2020-03-23\tIN\teng\t1219\t2263\n2020-08-27\tUK\teng\t621\t2255\n2020-04-06\tAS\teng\t636\t2254\n2020-02-29\tIT\teng\t519\t2248\n2020-08-07\tUK\teng\t672\t2244\n2020-07-22\tUK\teng\t868\t2240\n2020-06-22\tCH\teng\t642\t2239\n2020-03-13\tAS\teng\t528\t2234\n2020-08-12\tUK\teng\t674\t2234\n2020-10-24\tUS\teng\t939\t2233\n2020-12-13\tUK\teng\t412\t2221\n2020-09-02\tUK\teng\t700\t2221\n2020-04-11\tCH\teng\t836\t2220\n2020-05-02\tUK\teng\t729\t2217\n2020-12-27\tUK\teng\t525\t2214\n2020-04-02\tIN\teng\t1326\t2211\n2020-07-31\tUK\teng\t746\t2210\n2020-07-23\tCH\teng\t639\t2209\n2020-08-21\tUK\teng\t640\t2204\n2020-07-16\tCH\teng\t578\t2201\n2020-12-07\tUK\teng\t626\t2199\n2020-11-22\tUK\teng\t400\t2199\n2020-11-11\tUS\teng\t1087\t2195\n2020-11-12\tUS\teng\t1141\t2192\n2020-08-25\tUK\teng\t724\t2191\n2020-05-28\tCH\teng\t787\t2180\n2020-06-22\tUK\teng\t740\t2177\n2020-08-19\tUK\teng\t651\t2172\n2020-03-30\tIT\teng\t597\t2163\n2020-09-03\tUK\teng\t770\t2158\n2020-04-14\tIN\teng\t1126\t2157\n2020-02-28\tUK\teng\t512\t2157\n2020-01-24\tUS\teng\t601\t2154\n2020-12-18\tUK\teng\t564\t2154\n2020-06-23\tCH\teng\t664\t2151\n2020-06-30\tCH\teng\t691\t2150\n2020-11-27\tUK\teng\t594\t2140\n2020-07-13\tCH\teng\t625\t2134\n2020-09-19\tUK\teng\t478\t2126\n2020-03-27\tAS\teng\t701\t2123\n2020-11-21\tUK\teng\t426\t2117\n2020-04-07\tAS\teng\t635\t2117\n2020-04-06\tIN\teng\t1232\t2116\n2020-04-15\tAS\teng\t559\t2109\n2020-04-03\tCA\teng\t619\t2106\n2020-03-30\tIN\teng\t1255\t2092\n2020-03-14\tIT\teng\t654\t2091\n2020-02-03\tUS\teng\t835\t2088\n2020-03-04\tIR\teng\t541\t2087\n2020-03-16\tAS\teng\t603\t2086\n2020-06-03\tCH\teng\t680\t2077\n2020-07-14\tCH\teng\t625\t2075\n2020-06-09\tCH\teng\t661\t2064\n2020-03-20\tAS\teng\t624\t2064\n2020-04-02\tIS\teng\t456\t2064\n2020-06-16\tCH\teng\t650\t2063\n2020-11-16\tUS\teng\t862\t2062\n2020-03-19\tIN\teng\t1088\t2055\n2020-08-26\tUK\teng\t649\t2046\n2020-06-04\tCH\teng\t694\t2044\n2020-01-30\tUK\teng\t397\t2044\n2020-03-09\tUK\teng\t755\t2043\n2020-08-20\tUK\teng\t627\t2043\n2020-12-01\tUK\teng\t611\t2041\n2020-06-27\tUK\teng\t504\t2035\n2020-04-22\tIN\teng\t1013\t2033\n2020-10-14\tUK\teng\t609\t2032\n2020-06-28\tUK\teng\t483\t2030\n2020-04-20\tAS\teng\t585\t2020\n2020-08-05\tLE\teng\t311\t2019\n2020-03-19\tIR\teng\t452\t2014\n2020-10-08\tUK\teng\t751\t2010\n2020-06-14\tUK\teng\t537\t2000\n2020-10-06\tUK\teng\t674\t1993\n2020-02-07\tJA\teng\t287\t1985\n2020-08-11\tRS\teng\t462\t1981\n2020-03-22\tAS\teng\t476\t1980\n2020-08-04\tUK\teng\t656\t1976\n2020-05-03\tCH\teng\t605\t1973\n2020-11-01\tUS\teng\t766\t1972\n2020-02-18\tUS\teng\t677\t1971\n2020-04-06\tIT\teng\t534\t1965\n2020-03-12\tEI\teng\t404\t1963\n2020-03-15\tIT\teng\t605\t1959\n2020-05-29\tCH\teng\t752\t1956\n2020-03-26\tCA\teng\t704\t1952\n2020-03-24\tCA\teng\t683\t1948\n2020-03-03\tIR\teng\t600\t1943\n2020-02-23\tCH\teng\t697\t1942\n2020-11-02\tUK\teng\t613\t1941\n2020-04-20\tCA\teng\t444\t1939\n2020-07-05\tUK\teng\t511\t1937\n2020-04-11\tIT\teng\t357\t1932\n2020-10-12\tUK\teng\t703\t1931\n2020-02-27\tKS\teng\t463\t1929\n2020-04-27\tAS\teng\t515\t1927\n2020-03-26\tGM\teng\t414\t1925\n2020-07-26\tUK\teng\t507\t1924\n2020-01-31\tUK\teng\t501\t1924\n2020-05-16\tUK\teng\t661\t1922\n2020-08-28\tUK\teng\t638\t1922\n2020-08-06\tUK\teng\t685\t1922\n2020-09-22\tCH\teng\t502\t1916\n2020-07-08\tCH\teng\t678\t1907\n2020-10-16\tUS\teng\t785\t1906\n2020-04-29\tAS\teng\t532\t1905\n2020-02-02\tUS\teng\t509\t1903\n2020-07-07\tCH\teng\t646\t1901\n2020-03-27\tIN\teng\t1162\t1896\n2020-04-24\tIN\teng\t931\t1895\n2020-03-25\tIT\teng\t750\t1893\n2020-12-26\tUK\teng\t503\t1891\n2020-05-31\tUK\teng\t557\t1887\n2020-03-16\tCA\teng\t605\t1886\n2020-12-04\tUK\teng\t579\t1885\n2020-06-15\tCH\teng\t584\t1880\n2020-02-08\tUS\teng\t528\t1875\n2020-07-27\tCH\teng\t496\t1874\n2020-03-17\tIR\teng\t442\t1866\n2020-07-29\tCH\teng\t520\t1861\n2020-05-10\tCH\teng\t541\t1861\n2020-02-13\tUS\teng\t726\t1858\n2020-05-23\tCH\teng\t441\t1852\n2020-04-10\tIT\teng\t437\t1850\n2020-02-11\tUS\teng\t704\t1849\n2020-03-12\tAS\teng\t524\t1848\n2020-03-19\tFR\teng\t497\t1847\n2020-08-03\tUK\teng\t640\t1843\n2020-04-12\tCH\teng\t739\t1842\n2020-06-13\tUK\teng\t571\t1841\n2020-08-17\tUK\teng\t630\t1841\n2020-03-28\tAS\teng\t391\t1835\n2020-04-13\tIN\teng\t1095\t1834\n2020-06-24\tCH\teng\t571\t1832\n2020-07-15\tCH\teng\t553\t1831\n2020-05-19\tAS\teng\t481\t1830\n2020-04-16\tAS\teng\t555\t1828\n2020-04-10\tSP\teng\t318\t1827\n2020-03-27\tCA\teng\t691\t1825\n2020-03-18\tIN\teng\t1066\t1825\n2020-04-21\tAS\teng\t596\t1825\n2020-05-26\tCH\teng\t737\t1824\n2020-04-25\tCH\teng\t708\t1822\n2020-03-05\tIR\teng\t529\t1820\n2020-03-01\tUK\teng\t325\t1820\n2020-03-25\tCA\teng\t744\t1818\n2020-04-08\tIN\teng\t1174\t1814\n2020-04-15\tIN\teng\t1088\t1806\n2020-02-15\tUS\teng\t510\t1805\n2020-12-30\tCH\teng\t332\t1805\n2020-03-28\tIT\teng\t507\t1803\n2020-06-12\tCH\teng\t516\t1800\n2020-02-16\tJA\teng\t325\t1798\n2020-02-29\tKS\teng\t295\t1796\n2020-11-08\tUS\teng\t617\t1790\n2020-03-29\tIN\teng\t914\t1789\n2020-04-29\tIN\teng\t853\t1789\n2020-06-05\tCH\teng\t589\t1788\n2020-02-18\tJA\teng\t455\t1784\n2020-09-20\tUK\teng\t448\t1783\n2020-03-21\tIT\teng\t540\t1776\n2020-04-08\tAS\teng\t551\t1775\n2020-03-20\tIN\teng\t1059\t1770\n2020-05-25\tCH\teng\t614\t1767\n2020-04-09\tAS\teng\t593\t1765\n2020-05-06\tIN\teng\t837\t1765\n2020-10-30\tUS\teng\t761\t1763\n2020-05-05\tIN\teng\t848\t1758\n2020-04-10\tFR\teng\t340\t1758\n2020-05-17\tCH\teng\t615\t1749\n2020-08-10\tUK\teng\t627\t1746\n2020-07-09\tCH\teng\t584\t1745\n2020-04-26\tCH\teng\t645\t1743\n2020-06-02\tCH\teng\t650\t1739\n2020-09-26\tUK\teng\t439\t1737\n2020-04-07\tIS\teng\t379\t1736\n2020-06-26\tCH\teng\t510\t1733\n2020-05-30\tUK\teng\t523\t1729\n2020-03-17\tIN\teng\t990\t1728\n2020-09-23\tCH\teng\t453\t1727\n2020-05-02\tCH\teng\t624\t1725\n2020-02-25\tIT\teng\t605\t1722\n2020-09-12\tUK\teng\t470\t1722\n2020-10-07\tUK\teng\t706\t1721\n2020-12-06\tUK\teng\t382\t1718\n2020-05-04\tAS\teng\t469\t1715\n2020-03-25\tSP\tspa\t821\t1715\n2020-04-11\tIN\teng\t911\t1712\n2020-04-03\tIS\teng\t326\t1710\n2020-03-30\tCA\teng\t648\t1709\n2020-03-15\tEI\teng\t293\t1709\n2020-03-15\tAS\teng\t391\t1703\n2020-02-06\tUS\teng\t775\t1703\n2020-07-24\tCH\teng\t574\t1700\n2020-03-22\tIN\teng\t899\t1697\n2020-04-02\tCA\teng\t583\t1695\n2020-03-25\tIS\teng\t355\t1693\n2020-04-20\tIN\teng\t1009\t1687\n2020-04-16\tIN\teng\t1049\t1686\n2020-01-26\tUS\teng\t359\t1685\n2020-03-28\tIN\teng\t918\t1684\n2020-03-08\tUK\teng\t396\t1683\n2020-03-12\tCA\teng\t563\t1679\n2020-04-01\tIT\teng\t555\t1677\n2020-05-16\tCH\teng\t612\t1672\n2020-10-20\tUK\teng\t611\t1669\n2020-04-14\tIS\teng\t282\t1666\n2020-05-09\tUK\teng\t665\t1666\n2020-04-21\tIN\teng\t1029\t1664\n2020-04-07\tFR\teng\t416\t1663\n2020-04-05\tIN\teng\t952\t1656\n2020-05-08\tIN\teng\t871\t1646\n2020-03-18\tSP\tspa\t832\t1645\n2020-04-06\tSP\teng\t382\t1641\n2020-08-31\tUK\teng\t478\t1641\n2020-04-23\tAS\teng\t549\t1639\n2020-05-05\tAS\teng\t501\t1639\n2020-04-24\tAS\teng\t521\t1637\n2020-02-29\tIR\teng\t427\t1637\n2020-03-23\tCA\teng\t509\t1632\n2020-04-01\tRS\teng\t451\t1632\n2020-04-17\tIN\teng\t980\t1622\n2020-02-14\tUS\teng\t574\t1621\n2020-07-08\tAS\teng\t370\t1620\n2020-09-16\tCH\teng\t415\t1618\n2020-02-11\tUK\teng\t330\t1616\n2020-03-17\tFR\teng\t509\t1615\n2020-04-03\tAS\teng\t544\t1614\n2020-04-14\tAS\teng\t522\t1612\n2020-10-19\tUK\teng\t541\t1611\n2020-09-10\tCH\teng\t460\t1611\n2020-03-20\tFR\teng\t456\t1609\n2020-06-06\tCH\teng\t410\t1606\n2020-10-28\tUK\teng\t505\t1596\n2020-04-30\tIN\teng\t881\t1593\n2020-09-28\tUK\teng\t658\t1590\n2020-02-26\tIR\teng\t466\t1589\n2020-04-28\tIN\teng\t951\t1588\n2020-06-20\tUK\teng\t490\t1587\n2020-08-11\tCH\teng\t520\t1586\n2020-03-17\tGM\teng\t445\t1585\n2020-08-18\tUK\teng\t653\t1584\n2020-02-28\tIR\teng\t507\t1581\n2020-04-04\tIN\teng\t979\t1581\n2020-03-24\tSP\tspa\t851\t1578\n2020-03-17\tSP\tspa\t791\t1577\n2020-03-25\tGM\teng\t395\t1576\n2020-04-02\tIT\teng\t569\t1576\n2020-05-30\tCH\teng\t503\t1575\n2020-06-18\tAS\teng\t269\t1567\n2020-04-28\tAS\teng\t520\t1567\n2020-06-11\tCH\teng\t571\t1567\n2020-06-02\tAS\teng\t356\t1566\n2020-07-28\tCH\teng\t483\t1564\n2020-05-11\tIN\teng\t777\t1563\n2020-02-27\tIR\teng\t457\t1563\n2020-10-13\tUK\teng\t649\t1557\n2020-03-31\tIT\teng\t619\t1555\n2020-03-21\tIN\teng\t878\t1552\n2020-05-13\tRS\teng\t366\t1550\n2020-05-14\tRS\teng\t367\t1549\n2020-03-31\tCA\teng\t641\t1549\n2020-05-12\tIN\teng\t826\t1546\n2020-06-01\tCH\teng\t604\t1543\n2020-04-26\tIN\teng\t709\t1537\n2020-02-22\tUS\teng\t413\t1533\n2020-07-10\tCH\teng\t560\t1532\n2020-10-21\tUK\teng\t529\t1531\n2020-04-30\tAS\teng\t486\t1527\n2020-03-26\tSP\tspa\t774\t1524\n2020-09-07\tAS\teng\t316\t1523\n2020-11-09\tUK\teng\t482\t1522\n2020-03-18\tFR\teng\t488\t1520\n2020-03-31\tIS\teng\t372\t1519\n2020-04-02\tUS\tspa\t856\t1519\n2020-04-24\tFR\teng\t340\t1518\n2020-09-29\tUK\teng\t655\t1514\n2020-08-15\tUK\teng\t419\t1514\n2020-03-23\tGM\teng\t365\t1513\n2020-08-07\tCH\teng\t499\t1511\n2020-03-20\tSP\tspa\t817\t1511\n2020-05-20\tIN\teng\t755\t1510\n2020-07-31\tCH\teng\t493\t1507\n2020-05-19\tIN\teng\t733\t1506\n2020-08-05\tCH\teng\t440\t1506\n2020-03-20\tUS\tspa\t849\t1505\n2020-06-28\tCH\teng\t281\t1504\n2020-03-23\tSP\tspa\t775\t1504\n2020-04-15\tUS\tspa\t827\t1504\n2020-12-10\tCH\teng\t313\t1502\n2020-04-21\tCA\teng\t481\t1502\n2020-04-07\tIT\teng\t461\t1502\n2020-07-04\tUK\teng\t490\t1501\n2020-03-18\tUS\tspa\t863\t1499\n2020-06-08\tCH\teng\t572\t1499\n2020-03-16\tSP\tspa\t779\t1498\n2020-04-13\tIT\teng\t350\t1498\n2020-06-27\tCH\teng\t350\t1496\n2020-07-29\tAS\teng\t339\t1493\n2020-02-21\tUS\teng\t613\t1493\n2020-05-06\tAS\teng\t474\t1488\n2020-09-15\tCH\teng\t434\t1487\n2020-03-26\tFR\teng\t483\t1484\n2020-06-17\tAS\teng\t276\t1484\n2020-04-27\tIN\teng\t895\t1483\n2020-04-09\tIT\teng\t521\t1482\n2020-04-23\tGM\teng\t385\t1481\n2020-04-09\tSP\teng\t360\t1478\n2020-03-11\tCA\teng\t518\t1477\n2020-03-09\tCA\teng\t340\t1476\n2020-07-20\tCH\teng\t455\t1475\n2020-03-29\tCA\teng\t376\t1473\n2020-05-24\tCH\teng\t536\t1473\n2020-06-07\tCH\teng\t341\t1471\n2020-08-19\tAS\teng\t348\t1470\n2020-04-05\tIT\teng\t408\t1470\n2020-07-23\tAS\teng\t324\t1467\n2020-05-18\tAS\teng\t464\t1467\n2020-04-17\tUS\tspa\t787\t1467\n2020-12-23\tFR\teng\t295\t1466\n2020-12-22\tFR\teng\t276\t1462\n2020-03-27\tUS\tspa\t838\t1461\n2020-10-02\tCH\teng\t362\t1461\n2020-04-06\tCA\teng\t575\t1460\n2020-02-20\tUS\teng\t571\t1458\n2020-02-26\tKS\teng\t395\t1458\n2020-04-23\tIN\teng\t907\t1456\n2020-12-31\tCH\teng\t361\t1454\n2020-04-12\tIT\teng\t313\t1453\n2020-03-13\tSP\tspa\t754\t1452\n2020-03-15\tSP\teng\t366\t1451\n2020-06-14\tCH\teng\t327\t1449\n2020-03-02\tKS\teng\t433\t1448\n2020-03-19\tUS\tspa\t839\t1446\n2020-10-22\tUK\teng\t548\t1444\n"
+          },
+          {
+            "type": "HTML",
+            "data": "<div class=\"result-alert alert-warning\" role=\"alert\"><button type=\"button\" class=\"close\" data-dismiss=\"alert\" aria-label=\"Close\"><span aria-hidden=\"true\">&times;</span></button><strong>Output is truncated</strong> to 1000 rows. Learn more about <strong>zeppelin.spark.maxResult</strong></div>\n"
+          }
+        ]
+      },
+      "apps": [],
+      "runtimeInfos": {
+        "jobUrl": {
+          "propertyName": "jobUrl",
+          "label": "SPARK JOB",
+          "tooltip": "View in Spark web UI",
+          "group": "spark",
+          "values": [
+            {
+              "jobUrl": "http://ip-172-31-8-140.ec2.internal:4040/jobs/job?id=145",
+              "$$hashKey": "object:808"
+            },
+            {
+              "jobUrl": "http://ip-172-31-8-140.ec2.internal:4040/jobs/job?id=146",
+              "$$hashKey": "object:809"
+            },
+            {
+              "jobUrl": "http://ip-172-31-8-140.ec2.internal:4040/jobs/job?id=147",
+              "$$hashKey": "object:810"
+            }
+          ],
+          "interpreterSettingId": "spark"
+        }
+      },
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1611277640273_1079239815",
+      "id": "paragraph_1611277640273_1079239815",
+      "dateCreated": "2021-01-22T01:07:20+0000",
+      "dateStarted": "2021-01-22T01:23:59+0000",
+      "dateFinished": "2021-01-22T01:24:33+0000",
+      "status": "FINISHED",
+      "$$hashKey": "object:184"
+    },
+    {
+      "text": "%md\n#### Requête 2: Nombres de mentions pour chaque évenement d'un pays donné",
+      "user": "anonymous",
+      "dateUpdated": "2021-01-22T02:01:43+0000",
+      "config": {
+        "colWidth": 12,
+        "fontSize": 9,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "text",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "editorMode": "ace/mode/text",
+        "editorHide": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "HTML",
+            "data": "<h4>Requête 2: Nombres de mentions pour chaque évenement d'un pays donné</h4>\n"
+          }
+        ]
+      },
+      "apps": [],
+      "runtimeInfos": {},
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1611278121484_287417079",
+      "id": "paragraph_1611278121484_287417079",
+      "dateCreated": "2021-01-22T01:15:21+0000",
+      "dateStarted": "2021-01-22T02:01:41+0000",
+      "dateFinished": "2021-01-22T02:01:41+0000",
+      "status": "FINISHED",
+      "$$hashKey": "object:185"
+    },
+    {
+      "text": "val country_code = \"US\"\n\n\nval Answer2 = spark.read\n                .format(\"org.apache.spark.sql.cassandra\")\n                .options(Map(\"table\" -> \"q1\", \"keyspace\" -> \"gdelt\"))\n                .load()\n                .filter(col(\"country_code\") === country_code)\n                .groupBy(col(\"event_id\"), month(col(\"mention_date\")))\n                .agg(countDistinct(\"mention_id\"))\n\nAnswer2.orderBy(month(col(\"mention_date\")), countDistinct(\"mention_id\").desc).show()",
+      "user": "anonymous",
+      "dateUpdated": "2021-01-22T01:44:54+0000",
+      "config": {
+        "colWidth": 12,
+        "fontSize": 9,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "scala",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "editorMode": "ace/mode/scala"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "+---------+-------------------+-----------------+\n| event_id|month(mention_date)|count(mention_id)|\n+---------+-------------------+-----------------+\n|902450978|                  1|              378|\n|902202571|                  1|              331|\n|902712917|                  1|              290|\n|901398290|                  1|              249|\n|902269982|                  1|              214|\n|899593326|                  1|              183|\n|901333679|                  1|              177|\n|902357710|                  1|              172|\n|902181229|                  1|              171|\n|901314184|                  1|              170|\n|901083060|                  1|              166|\n|901660367|                  1|              163|\n|901920240|                  1|              158|\n|902078226|                  1|              158|\n|902083307|                  1|              156|\n|902775429|                  1|              150|\n|902755791|                  1|              145|\n|902466298|                  1|              132|\n|902658461|                  1|              124|\n|902681372|                  1|              120|\n+---------+-------------------+-----------------+\nonly showing top 20 rows\n\n\u001b[1m\u001b[34mcountry_code\u001b[0m: \u001b[1m\u001b[32mString\u001b[0m = US\n\u001b[1m\u001b[34mAnswer2\u001b[0m: \u001b[1m\u001b[32morg.apache.spark.sql.DataFrame\u001b[0m = [event_id: int, month(mention_date): int ... 1 more field]\n"
+          }
+        ]
+      },
+      "apps": [],
+      "runtimeInfos": {
+        "jobUrl": {
+          "propertyName": "jobUrl",
+          "label": "SPARK JOB",
+          "tooltip": "View in Spark web UI",
+          "group": "spark",
+          "values": [
+            {
+              "jobUrl": "http://ip-172-31-8-140.ec2.internal:4040/jobs/job?id=163",
+              "$$hashKey": "object:904"
+            },
+            {
+              "jobUrl": "http://ip-172-31-8-140.ec2.internal:4040/jobs/job?id=164",
+              "$$hashKey": "object:905"
+            },
+            {
+              "jobUrl": "http://ip-172-31-8-140.ec2.internal:4040/jobs/job?id=165",
+              "$$hashKey": "object:906"
+            }
+          ],
+          "interpreterSettingId": "spark"
+        }
+      },
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1611277953646_-1837094124",
+      "id": "paragraph_1611277953646_-1837094124",
+      "dateCreated": "2021-01-22T01:12:33+0000",
+      "dateStarted": "2021-01-22T01:44:54+0000",
+      "dateFinished": "2021-01-22T01:45:16+0000",
+      "status": "FINISHED",
+      "$$hashKey": "object:186"
+    },
+    {
+      "text": "%md\nNombre maximal de mentions pour un article par mois dans le pays considéré",
+      "user": "anonymous",
+      "dateUpdated": "2021-01-22T02:19:49+0000",
+      "config": {
+        "colWidth": 12,
+        "fontSize": 9,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "text",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "editorMode": "ace/mode/text",
+        "editorHide": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "apps": [],
+      "runtimeInfos": {},
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1611280065052_1202239829",
+      "id": "paragraph_1611280065052_1202239829",
+      "dateCreated": "2021-01-22T01:47:45+0000",
+      "status": "FINISHED",
+      "$$hashKey": "object:187",
+      "dateFinished": "2021-01-22T02:19:48+0000",
+      "dateStarted": "2021-01-22T02:19:48+0000",
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "HTML",
+            "data": "<p>Nombre maximal de mentions pour un article par mois dans le pays considéré</p>\n"
+          }
+        ]
+      }
+    },
+    {
+      "text": "z.show(Answer2.orderBy(countDistinct(\"mention_id\").desc))",
+      "user": "anonymous",
+      "dateUpdated": "2021-01-22T01:47:33+0000",
+      "config": {
+        "colWidth": 12,
+        "fontSize": 9,
+        "enabled": true,
+        "results": {
+          "0": {
+            "graph": {
+              "mode": "multiBarChart",
+              "height": 300,
+              "optionOpen": false,
+              "setting": {
+                "multiBarChart": {
+                  "rotate": {
+                    "degree": "-45"
+                  },
+                  "xLabelStatus": "default"
+                }
+              },
+              "commonSetting": {},
+              "keys": [
+                {
+                  "name": "month(mention_date)",
+                  "index": 1,
+                  "aggr": "sum"
+                }
+              ],
+              "groups": [],
+              "values": [
+                {
+                  "name": "count(mention_id)",
+                  "index": 2,
+                  "aggr": "max"
+                }
+              ]
+            },
+            "helium": {}
+          }
+        },
+        "editorSetting": {
+          "language": "scala",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "editorMode": "ace/mode/scala"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TABLE",
+            "data": "event_id\tmonth(mention_date)\tcount(mention_id)\n950196048\t10\t657\n917828197\t4\t616\n913460618\t3\t594\n924264869\t5\t580\n950358112\t10\t545\n914082264\t3\t523\n916338695\t4\t515\n921023850\t4\t502\n927754396\t6\t487\n927028589\t6\t469\n911104213\t3\t458\n922821127\t5\t447\n925692359\t5\t441\n913238236\t3\t433\n922710782\t5\t433\n914150141\t3\t432\n927882969\t6\t432\n935898600\t7\t426\n919868337\t4\t422\n960640336\t12\t420\n961551457\t12\t417\n914689745\t3\t416\n917201832\t4\t415\n937945823\t7\t415\n916604065\t4\t411\n920705788\t4\t404\n933083819\t7\t403\n960631679\t12\t400\n950539161\t10\t396\n950357516\t10\t394\n914361910\t3\t392\n913460755\t3\t392\n918600532\t4\t392\n959619869\t12\t391\n915910800\t4\t385\n926107619\t5\t382\n943281104\t8\t382\n902995550\t2\t380\n949812068\t10\t380\n913344497\t3\t379\n916615570\t4\t379\n902450978\t1\t378\n920199900\t4\t377\n917997520\t4\t375\n917584631\t4\t373\n911326204\t3\t371\n914278803\t3\t371\n957098601\t11\t370\n914027937\t3\t369\n910558714\t3\t368\n960218180\t12\t367\n922566779\t5\t366\n919059560\t4\t362\n914575677\t3\t360\n922380220\t5\t356\n930595714\t6\t356\n921552509\t5\t355\n940006303\t8\t354\n913818583\t3\t353\n926599444\t6\t352\n922190749\t5\t352\n913879680\t3\t351\n941766503\t8\t350\n914360959\t3\t350\n915019339\t3\t347\n956614494\t11\t347\n921940058\t5\t344\n914576553\t3\t344\n937733304\t7\t342\n955409704\t11\t340\n921305623\t5\t340\n915694289\t4\t339\n931830768\t6\t339\n929324557\t6\t337\n912772572\t3\t335\n925692354\t5\t335\n916130631\t4\t334\n921958248\t5\t332\n911823892\t3\t331\n942318136\t8\t331\n902202571\t1\t331\n940432763\t8\t331\n921940152\t5\t330\n918192997\t4\t330\n919150448\t4\t330\n945221031\t9\t330\n912733833\t3\t330\n912324991\t3\t330\n922821084\t5\t327\n919087770\t4\t324\n922358615\t5\t322\n936215281\t7\t321\n919247298\t4\t321\n915146337\t3\t319\n925133161\t5\t318\n942436820\t8\t318\n920705990\t4\t318\n914611811\t3\t316\n957790517\t12\t316\n953929754\t11\t314\n913000808\t3\t312\n935165118\t7\t312\n917218374\t4\t312\n916128732\t4\t311\n916807759\t4\t311\n913488190\t3\t310\n936972743\t7\t309\n938464167\t8\t307\n927548588\t6\t307\n919449784\t4\t307\n916890437\t4\t306\n912396972\t3\t305\n933166535\t7\t305\n920705807\t4\t304\n934942652\t7\t303\n918196020\t4\t302\n949800331\t10\t302\n916997754\t4\t300\n914150054\t3\t298\n950900852\t10\t297\n919453031\t4\t296\n937072667\t7\t296\n928887629\t6\t296\n949840913\t10\t296\n918201787\t4\t296\n915153930\t3\t295\n934280788\t7\t294\n937206454\t7\t294\n943280759\t8\t293\n915694345\t4\t292\n914796592\t3\t292\n919658280\t4\t290\n902712917\t1\t290\n918199509\t4\t290\n903586420\t2\t289\n919273644\t4\t289\n913053941\t3\t288\n913001707\t3\t288\n917595182\t4\t288\n916672914\t4\t287\n957211022\t12\t287\n921955396\t5\t286\n941895046\t8\t285\n949826123\t10\t285\n917828227\t4\t285\n927551806\t6\t284\n928017450\t6\t283\n928053117\t6\t282\n918405602\t4\t281\n913295028\t3\t281\n919865720\t4\t279\n914576497\t3\t279\n914796729\t3\t277\n914358982\t3\t277\n915013013\t3\t274\n943279480\t8\t274\n909345304\t3\t273\n956034601\t11\t273\n914150193\t3\t272\n938804060\t8\t272\n914367043\t3\t271\n915323156\t3\t270\n919868387\t4\t269\n922701427\t5\t269\n927026761\t6\t267\n914150124\t3\t266\n959192649\t12\t266\n913506361\t3\t265\n916602728\t4\t264\n912570812\t3\t264\n930037687\t6\t263\n940435970\t8\t263\n925896734\t5\t262\n940003898\t8\t262\n950196033\t10\t261\n936427363\t7\t261\n919449802\t4\t260\n955813888\t11\t260\n918014200\t4\t260\n945700212\t9\t260\n953712691\t11\t260\n931623104\t6\t259\n950196090\t10\t259\n938749825\t8\t259\n938376506\t8\t259\n942442344\t8\t259\n944154563\t9\t259\n914154434\t3\t258\n916021783\t4\t258\n932096567\t6\t257\n942005731\t8\t257\n947899200\t9\t256\n958213564\t12\t256\n941162167\t8\t255\n916130570\t4\t255\n920705853\t4\t254\n936024236\t7\t253\n922314070\t5\t253\n926417491\t5\t253\n957025494\t11\t253\n913914907\t3\t253\n946363711\t9\t253\n914615534\t3\t252\n934589599\t7\t252\n911107288\t3\t252\n917643192\t4\t252\n916793602\t4\t251\n951018671\t10\t251\n933800714\t7\t251\n921251537\t5\t250\n928756395\t6\t250\n939158476\t8\t250\n925897809\t5\t250\n931836307\t6\t250\n913458377\t3\t250\n917841858\t4\t250\n901398290\t1\t249\n913000898\t3\t248\n910868980\t3\t248\n940010579\t8\t247\n919247293\t4\t247\n949808059\t10\t247\n945140294\t9\t246\n910558986\t3\t246\n913900103\t3\t246\n918435427\t4\t245\n937530186\t7\t245\n912570828\t3\t245\n941987983\t8\t245\n914620857\t3\t244\n912281817\t3\t244\n954963768\t11\t244\n916507638\t4\t244\n916478102\t4\t244\n959821806\t12\t243\n955446803\t11\t243\n914150210\t3\t243\n906404286\t2\t242\n960434216\t12\t241\n925617271\t5\t241\n933633266\t7\t241\n919908089\t4\t241\n942003665\t8\t241\n931209764\t6\t241\n920504491\t4\t241\n927880354\t6\t241\n936869000\t7\t240\n954938573\t11\t240\n922566467\t5\t240\n928667313\t6\t240\n917861032\t4\t239\n928410529\t6\t239\n923640257\t5\t239\n935131435\t7\t238\n961521972\t12\t238\n938495984\t8\t238\n918937461\t4\t237\n913815639\t3\t237\n931397740\t6\t237\n913460640\t3\t237\n916607126\t4\t236\n925109839\t5\t236\n918135433\t4\t236\n930633113\t6\t236\n925503881\t5\t235\n911326872\t3\t235\n928219770\t6\t234\n948031840\t9\t234\n918394312\t4\t234\n949808064\t10\t233\n957360078\t12\t233\n918192938\t4\t233\n912904008\t3\t233\n913827568\t3\t233\n951159574\t10\t233\n919017123\t4\t231\n948148552\t9\t231\n916911158\t4\t231\n912783324\t3\t231\n930959871\t6\t230\n922578239\t5\t230\n917826967\t4\t230\n910811812\t3\t230\n915742633\t4\t230\n916133337\t4\t230\n934589625\t7\t229\n933705160\t7\t229\n913948938\t3\t229\n914359694\t3\t228\n932743845\t7\t228\n928790800\t6\t228\n911111210\t3\t228\n942437346\t8\t227\n920726511\t4\t227\n913601856\t3\t227\n917622470\t4\t227\n940649517\t8\t227\n914150037\t3\t227\n946798643\t9\t227\n916502198\t4\t226\n938347762\t8\t226\n913621318\t3\t226\n915146888\t3\t226\n917666982\t4\t226\n917827397\t4\t226\n917031242\t4\t225\n914796712\t3\t225\n923422609\t5\t225\n923633949\t5\t225\n941451072\t8\t224\n915094065\t3\t224\n913680158\t3\t224\n916906755\t4\t224\n946815822\t9\t224\n934724941\t7\t224\n953710298\t11\t224\n920520649\t4\t223\n939152017\t8\t223\n913005467\t3\t223\n962075332\t12\t222\n951682395\t10\t222\n920069779\t4\t222\n913771209\t3\t222\n931299319\t6\t222\n935122654\t7\t222\n913500290\t3\t221\n925897759\t5\t221\n918599338\t4\t221\n925046143\t5\t221\n921586704\t5\t220\n915872227\t4\t220\n920280810\t4\t220\n922150114\t5\t220\n923000510\t5\t219\n919699628\t4\t219\n919598573\t4\t219\n912430359\t3\t219\n943081353\t8\t219\n912772707\t3\t219\n948881524\t9\t219\n916610093\t4\t219\n914360738\t3\t219\n915278611\t3\t219\n943870806\t8\t219\n953420760\t10\t218\n914193987\t3\t218\n919247079\t4\t218\n922701272\t5\t217\n946013640\t9\t217\n943159161\t8\t217\n919702623\t4\t217\n944716583\t9\t217\n926030313\t5\t217\n911926339\t3\t217\n943064206\t8\t217\n948750756\t9\t217\n919449952\t4\t217\n912434819\t3\t216\n917014936\t4\t216\n932437021\t6\t216\n917201870\t4\t216\n929120728\t6\t216\n923087670\t5\t216\n926965090\t6\t216\n914576467\t3\t215\n913397225\t3\t215\n918621526\t4\t215\n922847633\t5\t215\n928025153\t6\t215\n922821094\t5\t214\n902269982\t1\t214\n924831990\t5\t214\n929579496\t6\t214\n921938678\t5\t214\n932426064\t6\t214\n920320227\t4\t214\n920504505\t4\t214\n916936488\t4\t213\n942012087\t8\t213\n916130637\t4\t213\n944076648\t9\t213\n930953937\t6\t213\n914364064\t3\t213\n926603726\t6\t213\n917873303\t4\t213\n917794288\t4\t212\n927563326\t6\t212\n914796516\t3\t212\n934023738\t7\t212\n930954060\t6\t212\n923421791\t5\t212\n917319338\t4\t212\n940429870\t8\t212\n934713802\t7\t212\n920069760\t4\t211\n926331493\t5\t211\n957020324\t11\t211\n932959940\t7\t211\n924805651\t5\t211\n918120424\t4\t210\n926598973\t6\t210\n912281837\t3\t210\n920715511\t4\t210\n917543745\t4\t210\n921760398\t5\t210\n917952639\t4\t210\n939392346\t8\t210\n941351898\t8\t210\n927391228\t6\t209\n930763122\t6\t209\n914295162\t3\t209\n956237329\t11\t209\n959439078\t12\t209\n934173756\t7\t209\n924485594\t5\t209\n920911822\t4\t209\n909228138\t2\t209\n957392126\t12\t209\n912589508\t3\t208\n947082044\t9\t208\n921553763\t5\t208\n938512989\t8\t208\n914826807\t3\t208\n940090190\t8\t208\n959543290\t12\t208\n945144108\t9\t208\n917522457\t4\t208\n942195368\t8\t208\n937074730\t7\t207\n916793332\t4\t207\n948551727\t9\t207\n922519176\t5\t207\n913264468\t3\t207\n919468630\t4\t207\n918241480\t4\t207\n945652663\t9\t207\n954823750\t11\t207\n941163781\t8\t207\n914794388\t3\t206\n934547948\t7\t206\n912776724\t3\t206\n920936475\t4\t206\n946657598\t9\t206\n913999976\t3\t206\n922075416\t5\t206\n936049775\t7\t206\n936474883\t7\t206\n935703184\t7\t205\n931122056\t6\t205\n961202793\t12\t205\n912400291\t3\t205\n912998707\t3\t205\n944995013\t9\t205\n924920261\t5\t205\n956063848\t11\t205\n923766005\t5\t204\n961431872\t12\t204\n915045971\t3\t204\n945593775\t9\t204\n928797766\t6\t204\n923960225\t5\t204\n921269748\t5\t203\n941471449\t8\t203\n960299110\t12\t203\n915175031\t3\t203\n938946521\t8\t203\n949993227\t10\t203\n945652921\t9\t203\n921392856\t5\t203\n925705461\t5\t203\n940800614\t8\t203\n940361288\t8\t203\n941327950\t8\t203\n927955456\t6\t203\n933506302\t7\t203\n919665155\t4\t203\n960217726\t12\t202\n915707273\t5\t202\n913563514\t3\t202\n917756141\t4\t202\n934452170\t7\t202\n961620026\t12\t202\n916603788\t4\t202\n916134556\t4\t201\n919772755\t4\t201\n948052753\t9\t201\n916805224\t4\t201\n958102324\t12\t201\n915694327\t4\t201\n938621449\t8\t201\n917832144\t4\t201\n913021996\t3\t201\n920939091\t4\t201\n932459924\t6\t201\n933596977\t7\t201\n917004347\t4\t200\n908970641\t2\t200\n914532068\t3\t200\n913920729\t3\t200\n917997325\t4\t200\n912706719\t3\t200\n947237413\t9\t200\n925626446\t5\t200\n933848925\t7\t200\n916793433\t4\t200\n917334354\t4\t200\n949489720\t9\t200\n953020737\t10\t200\n936428092\t7\t200\n914621901\t3\t199\n933404052\t7\t199\n944277009\t9\t199\n917041823\t4\t199\n945581468\t9\t199\n933614492\t7\t199\n917008980\t4\t199\n919074114\t4\t199\n931220021\t6\t199\n930179250\t6\t199\n961047387\t12\t199\n915591071\t3\t198\n938757682\t8\t198\n914966742\t3\t198\n929503874\t6\t198\n960807626\t12\t198\n917156684\t4\t198\n948990427\t9\t198\n916997830\t4\t198\n949005832\t9\t198\n917355561\t4\t197\n913756265\t3\t197\n955595240\t11\t197\n919389811\t4\t197\n932108709\t6\t197\n919191631\t4\t197\n925897743\t5\t197\n916132948\t4\t197\n921574863\t5\t197\n938484887\t8\t197\n917504806\t4\t197\n921121453\t5\t196\n914150953\t3\t196\n923000438\t5\t196\n953925872\t11\t196\n945022924\t9\t196\n926673724\t6\t196\n925842135\t5\t196\n934808504\t7\t196\n962151515\t12\t196\n911103004\t3\t196\n915582750\t3\t196\n924796747\t5\t196\n926354035\t5\t196\n919069001\t4\t195\n939311328\t8\t195\n924473485\t5\t195\n937327668\t7\t195\n912997422\t3\t195\n931628385\t6\t195\n939949089\t8\t195\n915636633\t3\t195\n958212989\t12\t195\n922675623\t5\t195\n920278483\t4\t194\n914903995\t3\t194\n933800284\t7\t194\n920320765\t4\t194\n918907669\t4\t194\n920585926\t4\t194\n932965123\t7\t194\n913001061\t3\t194\n913965236\t3\t193\n917202223\t4\t193\n919070535\t4\t193\n924960691\t5\t193\n919875567\t4\t193\n913142906\t3\t193\n936213944\t7\t193\n960301827\t12\t193\n927028519\t6\t193\n919889440\t4\t192\n913815890\t3\t192\n918107960\t4\t192\n920341791\t4\t192\n934741298\t7\t192\n919866414\t4\t192\n911826617\t3\t192\n925046293\t5\t192\n934740584\t7\t192\n922768423\t5\t192\n919273666\t4\t191\n921586290\t5\t191\n919374653\t4\t191\n917405786\t4\t191\n913885045\t3\t191\n942631564\t8\t191\n940268215\t8\t191\n927827407\t6\t191\n935978834\t7\t191\n957403403\t12\t191\n919871911\t4\t191\n936647920\t7\t191\n928679127\t6\t190\n917405675\t4\t190\n913683541\t3\t190\n940598202\t8\t190\n919135475\t4\t190\n961450304\t12\t190\n925047156\t5\t190\n950358193\t10\t190\n933299571\t7\t190\n947241591\t9\t189\n960217771\t12\t189\n935357429\t7\t189\n921050893\t4\t189\n934370132\t7\t189\n932007899\t6\t189\n930760338\t6\t189\n934961901\t7\t189\n940006973\t8\t188\n913001794\t3\t188\n922291658\t5\t188\n922358739\t5\t188\n925904948\t5\t188\n914915161\t3\t188\n913879870\t3\t188\n923759814\t5\t188\n916605540\t4\t188\n947312615\t9\t188\n933591908\t7\t188\n921955137\t5\t188\n959217185\t12\t188\n919669975\t4\t188\n913417775\t3\t188\n918396706\t4\t187\n923347899\t5\t187\n908656481\t2\t187\n915254892\t3\t187\n932512283\t7\t187\n916298783\t4\t187\n922358666\t5\t187\n930677897\t6\t187\n918396173\t4\t187\n956503705\t11\t187\n920320231\t4\t187\n956437984\t11\t187\n918798450\t4\t187\n920201044\t4\t187\n945920530\t9\t187\n916793322\t4\t187\n919670809\t4\t186\n929801471\t6\t186\n959630063\t12\t186\n943735591\t8\t186\n921659659\t5\t186\n961911258\t12\t186\n920503442\t4\t186\n941545893\t8\t186\n921774909\t5\t186\n930630567\t6\t186\n912491003\t3\t186\n906421227\t2\t186\n936818551\t7\t185\n913763272\t3\t185\n950539793\t10\t185\n913169982\t3\t185\n912285548\t3\t185\n934427850\t7\t185\n910573422\t3\t185\n921972544\t5\t185\n920358409\t4\t185\n920262001\t4\t185\n915531565\t3\t185\n925901445\t5\t185\n948703966\t9\t185\n932091648\t6\t185\n930954089\t6\t185\n929941593\t6\t185\n952488833\t10\t185\n915101105\t3\t185\n925978104\t5\t184\n924080297\t5\t184\n914866719\t3\t184\n917207611\t4\t184\n940215042\t8\t184\n937604483\t7\t184\n918201336\t4\t184\n911833234\t3\t184\n924837493\t5\t184\n915098817\t3\t184\n920627790\t4\t184\n919406580\t4\t184\n914609916\t3\t184\n928837086\t6\t184\n917733083\t4\t183\n928499702\t6\t183\n916910263\t4\t183\n921940271\t5\t183\n934710185\t7\t183\n948336974\t9\t183\n923205040\t5\t183\n899593326\t1\t183\n915942600\t4\t183\n910807353\t3\t182\n916004347\t4\t182\n919256581\t4\t182\n916336823\t4\t182\n914086584\t3\t182\n942868196\t8\t182\n915013986\t3\t182\n915697917\t4\t182\n922843227\t5\t182\n921012921\t4\t181\n912894980\t3\t181\n943281932\t8\t181\n915763956\t4\t181\n944140549\t9\t181\n922876165\t5\t181\n916793362\t4\t181\n908827118\t2\t181\n909523782\t3\t181\n938179641\t7\t181\n921588757\t5\t181\n923283168\t5\t181\n914576568\t3\t181\n913132967\t3\t181\n924281532\t5\t181\n948108300\t9\t181\n915474422\t3\t181\n913461171\t3\t180\n937522695\t7\t180\n922822778\t5\t180\n917583999\t4\t180\n917402956\t4\t180\n959753117\t12\t180\n921938878\t5\t180\n916338764\t4\t180\n931766776\t6\t180\n920376341\t4\t180\n950302736\t10\t180\n960808177\t12\t180\n957018800\t11\t180\n950096414\t10\t179\n911326190\t3\t179\n941208727\t8\t179\n908656416\t2\t179\n931512701\t6\t179\n922821930\t5\t179\n931627997\t6\t179\n960639493\t12\t179\n938079931\t7\t179\n913626760\t3\t179\n939051124\t8\t179\n913816083\t3\t179\n920070298\t4\t179\n916710587\t4\t179\n921506109\t5\t179\n953925059\t11\t179\n933979792\t7\t179\n914148814\t3\t179\n929521574\t6\t179\n937328747\t7\t178\n916434154\t4\t178\n938963629\t8\t178\n932214685\t6\t178\n919787542\t4\t178\n920448666\t4\t178\n915910724\t4\t178\n927577004\t6\t178\n958532618\t12\t178\n913773947\t3\t177\n908920848\t2\t177\n927544011\t7\t177\n915145626\t3\t177\n913177896\t3\t177\n917299441\t4\t177\n941987806\t8\t177\n933254831\t7\t177\n921304701\t5\t177\n932801619\t7\t177\n917829497\t4\t177\n925430244\t5\t177\n901333679\t1\t177\n936373910\t7\t177\n947507455\t9\t177\n916130771\t4\t177\n952201080\t10\t177\n961216029\t12\t176\n921119766\t5\t176\n916043641\t4\t176\n952003661\t10\t176\n914361048\t3\t176\n914195689\t3\t176\n908456334\t2\t176\n910604533\t3\t176\n939326643\t8\t176\n919246114\t4\t176\n960631442\t12\t176\n910851796\t3\t176\n941768892\t8\t176\n936428099\t7\t176\n913959225\t3\t176\n933797997\t7\t176\n949993244\t10\t176\n908693257\t2\t176\n908309906\t2\t176\n911073763\t3\t176\n919358651\t4\t175\n929190685\t6\t175\n914479684\t3\t175\n924090889\t5\t175\n915004069\t3\t175\n923633965\t5\t175\n919867153\t4\t175\n934930790\t7\t175\n914714372\t3\t175\n934836035\t7\t175\n915361194\t3\t175\n913000913\t3\t175\n922820479\t5\t175\n934153859\t7\t175\n932301750\t6\t175\n921338853\t5\t175\n919398034\t4\t174\n936475490\t7\t174\n916348662\t4\t174\n912572200\t3\t174\n921557167\t5\t174\n945890098\t9\t174\n913949250\t3\t174\n919077193\t4\t174\n916743636\t4\t174\n918600599\t4\t174\n915325127\t3\t174\n949286118\t9\t174\n957789355\t12\t174\n938597132\t8\t174\n942436811\t8\t174\n931175890\t6\t174\n923425359\t5\t174\n921940069\t5\t174\n917997346\t4\t174\n917676953\t4\t174\n925692425\t5\t174\n913045785\t3\t174\n925905233\t5\t173\n940248229\t8\t173\n942663677\t8\t173\n942866735\t8\t173\n917406414\t4\t173\n936037998\t7\t173\n906481136\t2\t173\n925901070\t5\t173\n935122824\t7\t173\n955166265\t11\t173\n908443265\t2\t173\n950099490\t10\t173\n956719104\t11\t173\n910722426\t3\t173\n923428883\t5\t173\n939826611\t8\t173\n915823438\t4\t173\n932737469\t7\t173\n941803657\t8\t173\n939848672\t8\t172\n940009037\t8\t172\n902357710\t1\t172\n912773366\t3\t172\n913676837\t3\t172\n919028045\t4\t172\n915438454\t3\t172\n916088842\t4\t172\n940673649\t8\t172\n925696138\t5\t172\n927101656\t6\t172\n931968783\t6\t172\n906566090\t2\t172\n955959218\t11\t172\n932644335\t7\t172\n959621108\t12\t172\n919528090\t4\t172\n924513602\t5\t172\n929124272\t6\t172\n939714431\t8\t172\n920560334\t4\t172\n913049490\t3\t172\n934158435\t7\t172\n913613912\t3\t172\n914505762\t3\t172\n918398410\t4\t171\n915704273\t4\t171\n923000432\t5\t171\n916340534\t4\t171\n916610293\t4\t171\n902181229\t1\t171\n949826064\t10\t171\n920911350\t4\t171\n919464460\t4\t171\n917372020\t4\t171\n914592994\t3\t171\n909970055\t3\t171\n938189431\t7\t171\n921003907\t4\t171\n916604017\t4\t171\n912891312\t3\t171\n930963110\t6\t171\n940875741\t8\t171\n910608683\t4\t171\n913460607\t3\t171\n918625760\t4\t171\n918198496\t4\t171\n914796897\t3\t171\n938946516\t8\t171\n924111269\t5\t171\n911362614\t3\t170\n914358635\t3\t170\n920445408\t4\t170\n918082764\t4\t170\n937525324\t7\t170\n915845592\t4\t170\n901314184\t1\t170\n924782394\t5\t170\n918192845\t4\t170\n926529095\t5\t170\n918214054\t4\t170\n912789240\t3\t170\n919467874\t4\t170\n920927754\t4\t170\n936650088\t7\t169\n940649581\t8\t169\n923561749\t5\t169\n931175655\t6\t169\n912572203\t3\t169\n942018968\t8\t169\n914211032\t3\t169\n916006112\t5\t169\n952929180\t10\t169\n924913386\t5\t169\n958814624\t12\t169\n911233389\t3\t168\n921554126\t5\t168\n933106172\t7\t168\n931831346\t6\t168\n924274311\t5\t168\n943281677\t8\t168\n920323481\t4\t168\n916050444\t4\t168\n930712365\t6\t168\n913000251\t3\t168\n937235478\t7\t168\n940429864\t8\t168\n904671541\t2\t168\n935904226\t7\t168\n923433972\t5\t167\n957592455\t12\t167\n918191881\t4\t167\n922572443\t5\t167\n932328248\t6\t167\n911369361\t3\t167\n916690999\t4\t167\n921781482\t5\t166\n914541772\t3\t166\n913032181\t3\t166\n921809194\t5\t166\n930277193\t6\t166\n913235911\t3\t166\n923421916\t5\t166\n931428866\t6\t166\n914826381\t3\t166\n922749893\t5\t166\n917260333\t4\t166\n920911756\t4\t166\n908589496\t2\t166\n901083060\t1\t166\n915046657\t3\t166\n914717217\t3\t166\n945992899\t9\t165\n936026287\t7\t165\n933929004\t7\t165\n930179780\t6\t165\n916425997\t4\t165\n917322861\t4\t165\n911459222\t3\t165\n930316200\t6\t165\n937258109\t7\t165\n958101886\t12\t165\n940669598\t8\t165\n914801085\t3\t165\n954983195\t11\t164\n914150055\t3\t164\n943064501\t8\t164\n916353514\t4\t164\n921739221\t5\t164\n914232321\t3\t164\n952931706\t10\t164\n913246629\t3\t164\n937294481\t7\t164\n943865340\t8\t164\n923634158\t5\t164\n908658792\t2\t164\n"
+          },
+          {
+            "type": "HTML",
+            "data": "<div class=\"result-alert alert-warning\" role=\"alert\"><button type=\"button\" class=\"close\" data-dismiss=\"alert\" aria-label=\"Close\"><span aria-hidden=\"true\">&times;</span></button><strong>Output is truncated</strong> to 1000 rows. Learn more about <strong>zeppelin.spark.maxResult</strong></div>\n"
+          }
+        ]
+      },
+      "apps": [],
+      "runtimeInfos": {
+        "jobUrl": {
+          "propertyName": "jobUrl",
+          "label": "SPARK JOB",
+          "tooltip": "View in Spark web UI",
+          "group": "spark",
+          "values": [
+            {
+              "jobUrl": "http://ip-172-31-8-140.ec2.internal:4040/jobs/job?id=166",
+              "$$hashKey": "object:1000"
+            },
+            {
+              "jobUrl": "http://ip-172-31-8-140.ec2.internal:4040/jobs/job?id=167",
+              "$$hashKey": "object:1001"
+            },
+            {
+              "jobUrl": "http://ip-172-31-8-140.ec2.internal:4040/jobs/job?id=168",
+              "$$hashKey": "object:1002"
+            }
+          ],
+          "interpreterSettingId": "spark"
+        }
+      },
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1611279359232_-1199251078",
+      "id": "paragraph_1611279359232_-1199251078",
+      "dateCreated": "2021-01-22T01:35:59+0000",
+      "dateStarted": "2021-01-22T01:45:04+0000",
+      "dateFinished": "2021-01-22T01:45:22+0000",
+      "status": "FINISHED",
+      "$$hashKey": "object:188"
+    },
+    {
+      "text": "%md\n#### Requête 3a: Informations relatives au traitement des thèmes/personnes/lieux liés aux Covid dans les articles d'une source spécifique.",
+      "user": "anonymous",
+      "dateUpdated": "2021-01-22T02:05:35+0000",
+      "config": {
+        "colWidth": 12,
+        "fontSize": 9,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "text",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "editorMode": "ace/mode/text",
+        "editorHide": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "HTML",
+            "data": "<h4>Requête 3a: Informations relatives au traitement des thèmes/personnes/lieux liés aux Covid dans les articles d'une source spécifique.</h4>\n"
+          }
+        ]
+      },
+      "apps": [],
+      "runtimeInfos": {},
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1611279452112_-1071716546",
+      "id": "paragraph_1611279452112_-1071716546",
+      "dateCreated": "2021-01-22T01:37:32+0000",
+      "dateStarted": "2021-01-22T02:05:33+0000",
+      "dateFinished": "2021-01-22T02:05:33+0000",
+      "status": "FINISHED",
+      "$$hashKey": "object:189"
+    },
+    {
+      "text": "val source = \"harwichandmanningtreestandard.co.uk\"",
+      "user": "anonymous",
+      "dateUpdated": "2021-01-22T02:05:44+0000",
+      "config": {
+        "colWidth": 12,
+        "fontSize": 9,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "scala",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "editorMode": "ace/mode/scala"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "apps": [],
+      "runtimeInfos": {},
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1611280874697_-800835706",
+      "id": "paragraph_1611280874697_-800835706",
+      "dateCreated": "2021-01-22T02:01:14+0000",
+      "status": "READY",
+      "$$hashKey": "object:190"
+    },
+    {
+      "text": "val Answer3Themes = spark.read\n                .format(\"org.apache.spark.sql.cassandra\")\n                .options(Map(\"table\" -> \"q3themes\", \"keyspace\" -> \"gdelt\"))\n                .load()\n                .filter(col(\"source_name\") === source)\n                .groupBy(col(\"source_name\"), year(col(\"publication_date\")), col(\"themes\"))\n                .agg(mean(\"tone\"), count(\"gkg_record_id\"))\n                .show()",
+      "user": "anonymous",
+      "dateUpdated": "2021-01-22T02:05:47+0000",
+      "config": {
+        "colWidth": 12,
+        "fontSize": 9,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "scala",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "editorMode": "ace/mode/scala"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "apps": [],
+      "runtimeInfos": {},
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1611280875617_-1651072700",
+      "id": "paragraph_1611280875617_-1651072700",
+      "dateCreated": "2021-01-22T02:01:15+0000",
+      "status": "READY",
+      "$$hashKey": "object:191"
+    },
+    {
+      "text": "val Answer3Persons = spark.read\n                .format(\"org.apache.spark.sql.cassandra\")\n                .options(Map(\"table\" -> \"q3persons\", \"keyspace\" -> \"gdelt\"))\n                .load()\n                .filter(col(\"source_name\") === source)\n                .groupBy(col(\"source_name\"), year(col(\"publication_date\")), col(\"persons\"))\n                .agg(mean(\"tone\"), count(\"gkg_record_id\"))\n                .show()",
+      "user": "anonymous",
+      "dateUpdated": "2021-01-22T02:06:58+0000",
+      "config": {
+        "colWidth": 12,
+        "fontSize": 9,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "scala",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "editorMode": "ace/mode/scala"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "+--------------------+----------------------+--------------------+-------------------+--------------------+\n|         source_name|year(publication_date)|             persons|          avg(tone)|count(gkg_record_id)|\n+--------------------+----------------------+--------------------+-------------------+--------------------+\n|harwichandmanning...|                  2020|        calum semple|       -1.106744945|                   4|\n|harwichandmanning...|                  2020|minster chung sye...|        -5.35529505|                   2|\n|harwichandmanning...|                  2020|     vaughan gething|         -1.1444389|                  13|\n|harwichandmanning...|                  2020|       sarah redshaw|          3.4321373|                   1|\n|harwichandmanning...|                  2020|     anneliese dodds|       -1.717997975|                  12|\n|harwichandmanning...|                  2020|     michelle oneill|-2.6764089707142853|                  14|\n|harwichandmanning...|                  2020|      danielle wynne|         -3.9308176|                   1|\n|harwichandmanning...|                  2020|     nicola sturgeon|-1.7039699358974354|                  78|\n|harwichandmanning...|                  2020|      euan maclennan|                0.0|                   1|\n|harwichandmanning...|                  2020|       joshua harris|          -5.191257|                   1|\n|harwichandmanning...|                  2020|   margaret thatcher|         0.58238305|                   2|\n|harwichandmanning...|                  2020|      george eustice|-2.8360685599999997|                   5|\n|harwichandmanning...|                  2020|      frances ogrady|-1.2799613983333333|                   6|\n|harwichandmanning...|                  2020|           tony adie|          2.7777777|                   1|\n|harwichandmanning...|                  2020|         penny junor|          1.2722646|                   1|\n|harwichandmanning...|                  2020|        yvonne doyle|-2.6610807892307693|                  13|\n|harwichandmanning...|                  2020|marshal mike wigston|         -3.4201953|                   1|\n|harwichandmanning...|                  2020|      nicole bernard|          2.1711366|                   1|\n|harwichandmanning...|                  2020|         paul hayman|          0.5769231|                   1|\n|harwichandmanning...|                  2020|     horkesley heath|         -1.2825411|                   2|\n+--------------------+----------------------+--------------------+-------------------+--------------------+\nonly showing top 20 rows\n\n\u001b[1m\u001b[34mAnswer3Persons\u001b[0m: \u001b[1m\u001b[32mUnit\u001b[0m = ()\n"
+          }
+        ]
+      },
+      "apps": [],
+      "runtimeInfos": {
+        "jobUrl": {
+          "propertyName": "jobUrl",
+          "label": "SPARK JOB",
+          "tooltip": "View in Spark web UI",
+          "group": "spark",
+          "values": [
+            {
+              "jobUrl": "http://ip-172-31-8-140.ec2.internal:4040/jobs/job?id=169",
+              "$$hashKey": "object:1176"
+            },
+            {
+              "jobUrl": "http://ip-172-31-8-140.ec2.internal:4040/jobs/job?id=170",
+              "$$hashKey": "object:1177"
+            }
+          ],
+          "interpreterSettingId": "spark"
+        }
+      },
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1611280876565_511284621",
+      "id": "paragraph_1611280876565_511284621",
+      "dateCreated": "2021-01-22T02:01:16+0000",
+      "dateStarted": "2021-01-22T02:06:58+0000",
+      "dateFinished": "2021-01-22T02:07:31+0000",
+      "status": "FINISHED",
+      "$$hashKey": "object:192"
+    },
+    {
+      "text": "val Answer3Locations = spark.read\n                .format(\"org.apache.spark.sql.cassandra\")\n                .options(Map(\"table\" -> \"q3locations\", \"keyspace\" -> \"gdelt\"))\n                .load()\n                .filter(col(\"source_name\") === source)\n                .groupBy(col(\"source_name\"), year(col(\"publication_date\")), col(\"location\"))\n                .agg(mean(\"tone\"), count(\"gkg_record_id\"))\n\nAnswer3Locations.show()",
+      "user": "anonymous",
+      "dateUpdated": "2021-01-22T02:07:37+0000",
+      "config": {
+        "colWidth": 12,
+        "fontSize": 9,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "scala",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "editorMode": "ace/mode/scala"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "+--------------------+----------------------+--------------------+-------------------+--------------------+\n|         source_name|year(publication_date)|            location|          avg(tone)|count(gkg_record_id)|\n+--------------------+----------------------+--------------------+-------------------+--------------------+\n|harwichandmanning...|                  2020|4#Newquay, Cornwa...|        -2.23394585|                   2|\n|harwichandmanning...|                  2020|3#White House, Di...| -2.717984028205128|                  39|\n|harwichandmanning...|                  2020|4#Elmbridge, Worc...|         -3.3830845|                   1|\n|harwichandmanning...|                  2020|4#Harrogate, Nort...| 1.5894676374999999|                   4|\n|harwichandmanning...|                  2020|4#Prince Of Wales...|          -7.807309|                   1|\n|harwichandmanning...|                  2020|4#Middlesex, Unit...|      -1.2892509525|                   4|\n|harwichandmanning...|                  2020|4#Merseyside, Uni...| -1.016172909090909|                  11|\n|harwichandmanning...|                  2020|1#Singapore#SN#SN...|        -3.49561251|                  10|\n|harwichandmanning...|                  2020|1#Bangladesh#BG#B...|-1.3280982166666666|                   3|\n|harwichandmanning...|                  2020|1#Taiwan#TW#TW#24...|-0.6810048450000001|                   8|\n|harwichandmanning...|                  2020|1#Israel#IS#IS#31...| -4.084341611111111|                   9|\n|harwichandmanning...|                  2020|1#Vietnam, Republ...| -3.937225655555556|                   9|\n|harwichandmanning...|                  2020|4#Veneto, Veneto,...|-3.9804745666666665|                   3|\n|harwichandmanning...|                  2020|4#Prestwick, Sout...|-1.5205486000000001|                   2|\n|harwichandmanning...|                  2020|4#Stanford, Leice...|         -2.3853211|                   1|\n|harwichandmanning...|                  2020|4#Alicante, Valen...|          1.0660981|                   1|\n|harwichandmanning...|                  2020|4#Blaby, Leiceste...|         -1.3623978|                   1|\n|harwichandmanning...|                  2020|4#Xinjiang, Jiang...|         -4.4471154|                   1|\n|harwichandmanning...|                  2020|5#East Renfrewshi...|         -2.6785715|                   1|\n|harwichandmanning...|                  2020|1#Dominica#DO#DO#...|          -3.152174|                   1|\n+--------------------+----------------------+--------------------+-------------------+--------------------+\nonly showing top 20 rows\n\n\u001b[1m\u001b[34mAnswer3Locations\u001b[0m: \u001b[1m\u001b[32morg.apache.spark.sql.DataFrame\u001b[0m = [source_name: string, year(publication_date): int ... 3 more fields]\n"
+          }
+        ]
+      },
+      "apps": [],
+      "runtimeInfos": {
+        "jobUrl": {
+          "propertyName": "jobUrl",
+          "label": "SPARK JOB",
+          "tooltip": "View in Spark web UI",
+          "group": "spark",
+          "values": [
+            {
+              "jobUrl": "http://ip-172-31-8-140.ec2.internal:4040/jobs/job?id=171",
+              "$$hashKey": "object:1227"
+            },
+            {
+              "jobUrl": "http://ip-172-31-8-140.ec2.internal:4040/jobs/job?id=172",
+              "$$hashKey": "object:1228"
+            }
+          ],
+          "interpreterSettingId": "spark"
+        }
+      },
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1611280877409_914089024",
+      "id": "paragraph_1611280877409_914089024",
+      "dateCreated": "2021-01-22T02:01:17+0000",
+      "dateStarted": "2021-01-22T02:07:37+0000",
+      "dateFinished": "2021-01-22T02:07:59+0000",
+      "status": "FINISHED",
+      "$$hashKey": "object:193"
+    },
+    {
+      "user": "anonymous",
+      "config": {
+        "colWidth": 12,
+        "fontSize": 9,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "scala",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "editorMode": "ace/mode/scala"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "apps": [],
+      "runtimeInfos": {},
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1611280878469_-1050243973",
+      "id": "paragraph_1611280878469_-1050243973",
+      "dateCreated": "2021-01-22T02:01:18+0000",
+      "status": "READY",
+      "$$hashKey": "object:194"
+    }
+  ],
+  "name": "RequetesBDD",
+  "id": "2FWHYZZ8C",
+  "defaultInterpreterGroup": "spark",
+  "version": "0.9.0-preview1",
+  "noteParams": {},
+  "noteForms": {},
+  "angularObjects": {},
+  "config": {
+    "isZeppelinNotebookCronEnable": false,
+    "looknfeel": "default",
+    "personalizedMode": "false"
+  },
+  "info": {},
+  "path": "/RequetesBDD"
+}

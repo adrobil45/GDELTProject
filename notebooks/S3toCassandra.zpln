@@ -1,0 +1,910 @@
+﻿{
+  "paragraphs": [
+    {
+      "text": "import com.amazonaws.services.s3.AmazonS3Client\nimport com.amazonaws.auth.BasicSessionCredentials\n    \nval AWS_ID = \"ASIAXXGLJFF7XTSAO2VK\"\nval AWS_KEY = \"GWsOKtivjZH4+i5GuuFPfMXoETZ07+GnT0g5bXUZ\"\nval AWS_SESSION_KEY = \"FwoGZXIvYXdzEOb//////////wEaDG1oM5fdvq1o46RZ9CLOATa9mWhKXAtJ1p6tlJkD/9KZZzHmI19NLUOwjWR+na1RFObiZaJOLlDhgYO9sw7JZqGzZvNlSLqCluIgiBZ2F7+x2x6n3EbGbe9ly0330g4O9M9TKvsShlWvhfVjBakXA0sNKkonAK39UEV9/pjP+QAQCjviGfbYsT5wgE6MPPSGwrGc5ZRub3Sv+5tOLRW10NswxcTe4oskjjAWfH2YHLvsuay8gt4TI/hytY66brrdjsXCVb/ZAbEg6/5a0Pt7599V1nhciF3yT0HweAE9KLPYp4AGMi2t7OdvGUMwBXwYrfrUmzWUgFld2U3ByfPy4uE15vnORHv/lCCFvrRRqolDtFo=\"\n\nval awsClient = new AmazonS3Client(new BasicSessionCredentials(AWS_ID, AWS_KEY, AWS_SESSION_KEY))",
+      "user": "anonymous",
+      "dateUpdated": "2021-01-24T14:51:04+0100",
+      "progress": 0,
+      "config": {
+        "editorSetting": {
+          "language": "scala",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12,
+        "editorMode": "ace/mode/scala",
+        "fontSize": 9,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "\u001b[33mwarning: \u001b[0mthere was one deprecation warning; for details, enable `:setting -deprecation' or `:replay -deprecation'\nimport com.amazonaws.services.s3.AmazonS3Client\nimport com.amazonaws.auth.BasicSessionCredentials\n\u001b[1m\u001b[34mAWS_ID\u001b[0m: \u001b[1m\u001b[32mString\u001b[0m = ASIAXXGLJFF7XTSAO2VK\n\u001b[1m\u001b[34mAWS_KEY\u001b[0m: \u001b[1m\u001b[32mString\u001b[0m = GWsOKtivjZH4+i5GuuFPfMXoETZ07+GnT0g5bXUZ\n\u001b[1m\u001b[34mAWS_SESSION_KEY\u001b[0m: \u001b[1m\u001b[32mString\u001b[0m = FwoGZXIvYXdzEOb//////////wEaDG1oM5fdvq1o46RZ9CLOATa9mWhKXAtJ1p6tlJkD/9KZZzHmI19NLUOwjWR+na1RFObiZaJOLlDhgYO9sw7JZqGzZvNlSLqCluIgiBZ2F7+x2x6n3EbGbe9ly0330g4O9M9TKvsShlWvhfVjBakXA0sNKkonAK39UEV9/pjP+QAQCjviGfbYsT5wgE6MPPSGwrGc5ZRub3Sv+5tOLRW10NswxcTe4oskjjAWfH2YHLvsuay8gt4TI/hytY66brrdjsXCVb/ZAbEg6/5a0Pt7599V1nhciF3yT0HweAE9KLPYp4AGMi2t7OdvGUMwBXwYrfrUmzWUgFld2U3ByfPy4uE15vnORHv/lCCFvrRRqolDtFo=\n\u001b[1m\u001b[34mawsClient\u001b[0m: \u001b[1m\u001b[32mcom.amazonaws.services.s3.AmazonS3Client\u001b[0m = com.amazonaws.service...\n"
+          }
+        ]
+      },
+      "apps": [],
+      "runtimeInfos": {},
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1611496264476_1012292862",
+      "id": "paragraph_1611264587604_-1392211416",
+      "dateCreated": "2021-01-24T14:51:04+0100",
+      "status": "READY",
+      "focus": true,
+      "$$hashKey": "object:3045"
+    },
+    {
+      "text": "import com.datastax.spark.connector.cql.CassandraConnector\nimport com.datastax.spark.connector.rdd.ReadConf\n\nval connector = CassandraConnector(sc.getConf)",
+      "user": "anonymous",
+      "dateUpdated": "2021-01-24T14:51:04+0100",
+      "progress": 0,
+      "config": {
+        "editorSetting": {
+          "language": "scala",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12,
+        "editorMode": "ace/mode/scala",
+        "fontSize": 9,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "import com.datastax.spark.connector.cql.CassandraConnector\nimport com.datastax.spark.connector.rdd.ReadConf\n\u001b[1m\u001b[34mconnector\u001b[0m: \u001b[1m\u001b[32mcom.datastax.spark.connector.cql.CassandraConnector\u001b[0m = com.datastax.spark.connector.cql.CassandraConnector@235381e2\n"
+          }
+        ]
+      },
+      "apps": [],
+      "runtimeInfos": {},
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1611496264477_1913874625",
+      "id": "paragraph_1611264799714_-1675797343",
+      "dateCreated": "2021-01-24T14:51:04+0100",
+      "status": "READY",
+      "$$hashKey": "object:3046"
+    },
+    {
+      "text": "%md\n### Question 1",
+      "user": "anonymous",
+      "dateUpdated": "2021-01-24T14:51:04+0100",
+      "progress": 0,
+      "config": {
+        "editorSetting": {
+          "language": "markdown",
+          "editOnDblClick": true,
+          "completionKey": "TAB",
+          "completionSupport": false
+        },
+        "colWidth": 12,
+        "editorMode": "ace/mode/markdown",
+        "fontSize": 9,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "HTML",
+            "data": "<h3>Question 1</h3>\n"
+          }
+        ]
+      },
+      "apps": [],
+      "runtimeInfos": {},
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1611496264478_1507172984",
+      "id": "paragraph_1611264654737_-1626741391",
+      "dateCreated": "2021-01-24T14:51:04+0100",
+      "status": "READY",
+      "$$hashKey": "object:3047"
+    },
+    {
+      "text": "val dfQ1 = spark.read\n    .option(\"header\",\"true\")\n    .option(\"inferSchema\", \"true\")\n    .csv(\"s3://fassier-morgan-telecom-gdelt2020/Q1/*.csv\")\n    // .csv(\"s3://fassier-morgan-telecom-gdelt2020/Q1/part-00000-b5862c3d-2ea4-4f30-bb9e-ad05ff197328-c000.csv\")\n    .withColumn(\"MentionTimeDate\",to_date(col(\"MentionTimeDate\")))\n    .withColumnRenamed(\"GlobalEventID\", \"event_id\")\n    .withColumnRenamed(\"MentionIdentifier\", \"mention_id\")\n    .withColumnRenamed(\"MentionTimeDate\", \"mention_date\")\n    .withColumnRenamed(\"MentionDocTranslationInfo\", \"language\")\n    .withColumnRenamed(\"ActionGeo_CountryCode\", \"country_code\")\n    .na.drop()\n\n\ndfQ1.show()",
+      "user": "anonymous",
+      "dateUpdated": "2021-01-24T14:51:04+0100",
+      "progress": 0,
+      "config": {
+        "editorSetting": {
+          "language": "scala",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12,
+        "editorMode": "ace/mode/scala",
+        "fontSize": 9,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "+---------+------------+--------------------+--------+------------+\n| event_id|mention_date|          mention_id|language|country_code|\n+---------+------------+--------------------+--------+------------+\n|896067963|  2020-01-01|https://www.3seer...|     eng|          SA|\n|896874893|  2020-01-05|https://mothershi...|     eng|          SN|\n|896882099|  2020-02-04|https://www.24-ho...|     spa|          CH|\n|896993727|  2020-01-06|https://www.hongk...|     eng|          CH|\n|897756231|  2020-01-09|https://www.ksl.c...|     eng|          US|\n|897756794|  2020-01-09|https://www.ksl.c...|     eng|          IZ|\n|897833456|  2020-01-09|https://www.msn.c...|     eng|          CH|\n|897833456|  2020-01-09|https://www.bbc.c...|     eng|          CH|\n|897833456|  2020-01-09|https://www.bbc.c...|     eng|          CH|\n|898102270|  2020-01-10|http://www.koreat...|     eng|          CH|\n|898209750|  2020-01-10|https://www.diari...|     spa|          CH|\n|898282999|  2020-01-11|https://www.scien...|     fra|          US|\n|898282999|  2020-01-11|https://www.lemat...|     fra|          US|\n|898282999|  2020-01-11|http://www.bssnew...|     eng|          US|\n|898282999|  2020-01-11|https://www.lepoi...|     fra|          US|\n|898282999|  2020-01-11|https://www.rtl.b...|     fra|          US|\n|898282999|  2020-01-11|https://www.rjb.c...|     fra|          US|\n|898282999|  2020-01-11|https://www.lemat...|     fra|          US|\n|898282999|  2020-01-11|https://www.rfj.c...|     fra|          US|\n|898282999|  2020-01-11|https://www.rtbf....|     fra|          US|\n+---------+------------+--------------------+--------+------------+\nonly showing top 20 rows\n\n\u001b[1m\u001b[34mdfQ1\u001b[0m: \u001b[1m\u001b[32morg.apache.spark.sql.DataFrame\u001b[0m = [event_id: int, mention_date: date ... 3 more fields]\n"
+          }
+        ]
+      },
+      "apps": [],
+      "runtimeInfos": {},
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1611496264478_627467255",
+      "id": "paragraph_1611264674557_-1116710740",
+      "dateCreated": "2021-01-24T14:51:04+0100",
+      "status": "READY",
+      "$$hashKey": "object:3048"
+    },
+    {
+      "text": "connector.withSessionDo { session =>\n  session.execute(\"CREATE KEYSPACE IF NOT EXISTS gdelt WITH REPLICATION = {'class': 'SimpleStrategy', 'replication_factor': 3 }\")\n  session.execute(\"USE gdelt\")\n  session.execute(\"DROP TABLE IF EXISTS q1\")\n  session.execute(\"CREATE TABLE q1 (event_id int, mention_date date, mention_id text, language text, country_code text, PRIMARY KEY((mention_date), country_code, language, mention_id))\")\n}",
+      "user": "anonymous",
+      "dateUpdated": "2021-01-24T14:51:04+0100",
+      "progress": 0,
+      "config": {
+        "editorSetting": {
+          "language": "scala",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12,
+        "editorMode": "ace/mode/scala",
+        "fontSize": 9,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "\u001b[1m\u001b[34mres19\u001b[0m: \u001b[1m\u001b[32mcom.datastax.oss.driver.api.core.cql.ResultSet\u001b[0m = com.datastax.oss.driver.internal.core.cql.SinglePageResultSet@319cf9e2\n"
+          }
+        ]
+      },
+      "apps": [],
+      "runtimeInfos": {},
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1611496264479_338512760",
+      "id": "paragraph_1611265100186_-1575440394",
+      "dateCreated": "2021-01-24T14:51:04+0100",
+      "status": "READY",
+      "$$hashKey": "object:3049"
+    },
+    {
+      "text": "// Création keyspace et table\ndfQ1.write.format(\"org.apache.spark.sql.cassandra\")\n  .options(Map(\"table\" -> \"q1\", \"keyspace\" -> \"gdelt\"))\n  .mode(\"append\")\n  .save()",
+      "user": "anonymous",
+      "dateUpdated": "2021-01-24T14:51:04+0100",
+      "progress": 0,
+      "config": {
+        "editorSetting": {
+          "language": "scala",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12,
+        "editorMode": "ace/mode/scala",
+        "fontSize": 9,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": []
+      },
+      "apps": [],
+      "runtimeInfos": {},
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1611496264479_1494197084",
+      "id": "paragraph_1611264693580_351537874",
+      "dateCreated": "2021-01-24T14:51:04+0100",
+      "status": "READY",
+      "$$hashKey": "object:3050"
+    },
+    {
+      "text": "%md\n\n### Question 2",
+      "user": "anonymous",
+      "dateUpdated": "2021-01-24T14:51:04+0100",
+      "progress": 0,
+      "config": {
+        "editorSetting": {
+          "language": "markdown",
+          "editOnDblClick": true,
+          "completionKey": "TAB",
+          "completionSupport": false
+        },
+        "colWidth": 12,
+        "editorMode": "ace/mode/markdown",
+        "fontSize": 9,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "HTML",
+            "data": "<h3>Question 2</h3>\n"
+          }
+        ]
+      },
+      "apps": [],
+      "runtimeInfos": {},
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1611496264480_214734494",
+      "id": "paragraph_1611265256637_1423241693",
+      "dateCreated": "2021-01-24T14:51:04+0100",
+      "status": "READY",
+      "$$hashKey": "object:3052"
+    },
+    {
+      "text": "val dfQ2 = spark.read\n    .option(\"header\",\"true\")\n    .option(\"inferSchema\", \"true\")\n    .csv(\"s3://fassier-morgan-telecom-gdelt2020/Q2/*.csv\")\n    .withColumn(\"EventDate\",to_date(col(\"EventDate\")))\n    .withColumnRenamed(\"GlobalEventID\", \"event_id\")\n    .withColumnRenamed(\"MentionIdentifier\", \"mention_id\")\n    .withColumnRenamed(\"EventDate\", \"event_date\")\n    .withColumnRenamed(\"ActionGeo_CountryCode\", \"country_code\")\n    .na.drop()\n\n\ndfQ2.show()",
+      "user": "anonymous",
+      "dateUpdated": "2021-01-24T14:51:04+0100",
+      "progress": 0,
+      "config": {
+        "editorSetting": {
+          "language": "scala",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12,
+        "editorMode": "ace/mode/scala",
+        "fontSize": 9,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "+---------+--------------------+----------+------------+\n| event_id|          mention_id|event_date|country_code|\n+---------+--------------------+----------+------------+\n|896897604|https://www.taiwa...|2020-01-05|          HK|\n|897036743|https://www.teleg...|2020-01-06|          CH|\n|897036743|https://www.msn.c...|2020-01-06|          CH|\n|897036743|https://www.msn.c...|2020-01-06|          CH|\n|897137056|https://www.bigne...|2020-01-06|          HK|\n|897137056|https://www.middl...|2020-01-06|          HK|\n|897137056|https://www.greek...|2020-01-06|          HK|\n|897137056|https://www.shang...|2020-01-06|          HK|\n|897137056|https://www.color...|2020-01-06|          HK|\n|897137056|https://www.rfa.o...|2020-01-06|          HK|\n|897137056|https://www.singa...|2020-01-06|          HK|\n|897137056|https://www.arabh...|2020-01-06|          HK|\n|897137056|https://www.iranh...|2020-01-06|          HK|\n|897137056|https://www.shang...|2020-01-06|          HK|\n|897714574|https://life.ru/p...|2020-01-09|          CH|\n|897714574|https://www.cas.s...|2020-01-09|          CH|\n|897714574|https://bdnews24....|2020-01-09|          CH|\n|897714574|https://www.newze...|2020-01-09|          CH|\n|897714574|http://easternont...|2020-01-09|          CH|\n|897714574|https://www.nepal...|2020-01-09|          CH|\n+---------+--------------------+----------+------------+\nonly showing top 20 rows\n\n\u001b[1m\u001b[34mdfQ2\u001b[0m: \u001b[1m\u001b[32morg.apache.spark.sql.DataFrame\u001b[0m = [event_id: int, mention_id: string ... 2 more fields]\n"
+          }
+        ]
+      },
+      "apps": [],
+      "runtimeInfos": {},
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1611496264480_741631268",
+      "id": "paragraph_1611266099290_1065260823",
+      "dateCreated": "2021-01-24T14:51:04+0100",
+      "status": "READY",
+      "$$hashKey": "object:3053"
+    },
+    {
+      "text": "connector.withSessionDo { session =>\n  session.execute(\"CREATE KEYSPACE IF NOT EXISTS gdelt WITH REPLICATION = {'class': 'SimpleStrategy', 'replication_factor': 3 }\")\n  session.execute(\"USE gdelt\")\n  session.execute(\"DROP TABLE IF EXISTS q2\")\n  session.execute(\"CREATE TABLE q2 (event_id int, mention_id text, event_date date, country_code text, PRIMARY KEY((event_date, country_code), mention_id))\")\n}",
+      "user": "anonymous",
+      "dateUpdated": "2021-01-24T14:51:04+0100",
+      "progress": 0,
+      "config": {
+        "editorSetting": {
+          "language": "scala",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12,
+        "editorMode": "ace/mode/scala",
+        "fontSize": 9,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "\u001b[1m\u001b[34mres22\u001b[0m: \u001b[1m\u001b[32mcom.datastax.oss.driver.api.core.cql.ResultSet\u001b[0m = com.datastax.oss.driver.internal.core.cql.SinglePageResultSet@1a3bd385\n"
+          }
+        ]
+      },
+      "apps": [],
+      "runtimeInfos": {},
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1611496264480_2056968651",
+      "id": "paragraph_1611266144474_-2117564096",
+      "dateCreated": "2021-01-24T14:51:04+0100",
+      "status": "READY",
+      "$$hashKey": "object:3054"
+    },
+    {
+      "text": "dfQ2.write.format(\"org.apache.spark.sql.cassandra\")\n  .options(Map(\"table\" -> \"q2\", \"keyspace\" -> \"gdelt\"))\n  .mode(\"append\")\n  .save()",
+      "user": "anonymous",
+      "dateUpdated": "2021-01-24T14:51:04+0100",
+      "progress": 0,
+      "config": {
+        "editorSetting": {
+          "language": "scala",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12,
+        "editorMode": "ace/mode/scala",
+        "fontSize": 9,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": []
+      },
+      "apps": [],
+      "runtimeInfos": {},
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1611496264480_116031596",
+      "id": "paragraph_1611266238594_-312208071",
+      "dateCreated": "2021-01-24T14:51:04+0100",
+      "status": "READY",
+      "$$hashKey": "object:3055"
+    },
+    {
+      "text": "%md\n### Question 3\n\npour une source de donnés passée en paramètre (gkg.SourceCommonName)  affichez les thèmes, personnes, lieux dont les articles de cette sources  parlent ainsi que le le nombre d’articles et le ton moyen des articles  (pour chaque thème/personne/lieu); permettez une agrégation par  jour/mois/année.",
+      "user": "anonymous",
+      "dateUpdated": "2021-01-24T14:51:04+0100",
+      "progress": 0,
+      "config": {
+        "editorSetting": {
+          "language": "markdown",
+          "editOnDblClick": true,
+          "completionKey": "TAB",
+          "completionSupport": false
+        },
+        "colWidth": 12,
+        "editorMode": "ace/mode/markdown",
+        "fontSize": 9,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "HTML",
+            "data": "<h3>Question 3</h3>\n<p>pour une source de donnés passée en paramètre (gkg.SourceCommonName)  affichez les thèmes, personnes, lieux dont les articles de cette sources  parlent ainsi que le le nombre d’articles et le ton moyen des articles  (pour chaque thème/personne/lieu); permettez une agrégation par  jour/mois/année.</p>\n"
+          }
+        ]
+      },
+      "apps": [],
+      "runtimeInfos": {},
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1611496264481_1772862880",
+      "id": "paragraph_1611268155262_1475268533",
+      "dateCreated": "2021-01-24T14:51:04+0100",
+      "status": "READY",
+      "$$hashKey": "object:3057"
+    },
+    {
+      "text": "val dfQ3Themes = spark.read\n    .option(\"header\",\"true\")\n    .option(\"inferSchema\", \"true\")\n    .csv(\"s3://fassier-morgan-telecom-gdelt2020/Q3Themes/*.csv\")\n    .withColumn(\"Date\",to_date(col(\"Date\")))\n    .withColumnRenamed(\"GkgRecordID\", \"gkg_record_id\")\n    .withColumnRenamed(\"Date\", \"publication_date\")\n    .withColumnRenamed(\"SourceCommonName\", \"source_name\")\n    .withColumnRenamed(\"Themes\", \"themes\")\n    .withColumnRenamed(\"Tone\", \"tone\")\n\n\ndfQ3Themes.show()",
+      "user": "anonymous",
+      "dateUpdated": "2021-01-24T14:51:04+0100",
+      "progress": 0,
+      "config": {
+        "editorSetting": {
+          "language": "scala",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12,
+        "editorMode": "ace/mode/scala",
+        "fontSize": 9,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "+--------------------+----------------+------------------+--------------------+-----------+\n|       gkg_record_id|publication_date|       source_name|              themes|       tone|\n+--------------------+----------------+------------------+--------------------+-----------+\n| 20201126113000-T748|      2020-11-26|          infox.ru|WB_2166_HEALTH_EM...| -3.5460992|\n| 20201211003000-T301|      2020-12-11|         diario.mx|     UNGP_HEALTHCARE| 0.14534883|\n| 20200530171500-T754|      2020-05-30|       laregion.es|TAX_FOODSTAPLES_MEAT| -0.9160305|\n| 20201229004500-1142|      2020-12-29|somersetlive.co.uk|              LEADER| -1.9575857|\n| 20201229004500-1142|      2020-12-29|somersetlive.co.uk|WB_1350_PHARMACEU...| -1.9575857|\n|  20200420083000-168|      2020-04-20| huffingtonpost.in|EPU_CATS_MIGRATIO...|-0.82372326|\n| 20200420113000-1586|      2020-04-20| palmbeachpost.com|TAX_FNCACT_PRESID...|-0.72727275|\n|  20201230171500-704|      2020-12-30|  thecourier.co.uk|EPU_ECONOMY_HISTORIC|   2.425876|\n|  20200420153000-443|      2020-04-20|         abc11.com|EPU_POLICY_LAWMAKERS|     -1.625|\n| 20201128060000-T267|      2020-11-28|             kp.ua| TAX_FNCACT_DIRECTOR| -2.0855615|\n| 20200602194500-T600|      2020-06-02|   special.tass.ru|     HEALTH_PANDEMIC| -1.4084507|\n|20201214193000-T2464|      2020-12-14|            r7.com|      GENERAL_HEALTH| 0.26666668|\n|  20200603150000-T85|      2020-06-03|       seneweb.com|      WB_825_TOURISM| -1.4040562|\n| 20201130000000-T876|      2020-11-30|         em.com.br|CRISISLEX_C01_CHI...| 0.18382353|\n| 20200424011500-1012|      2020-04-24|recorderonline.com|    WB_2943_SWITCHES| -2.9015543|\n| 20200424134500-1156|      2020-04-24|       reuters.com|    WB_470_EDUCATION| -1.1019284|\n| 20200424151500-1973|      2020-04-24|clickondetroit.com|       USPEC_POLICY1|  -4.113924|\n| 20200424174500-1485|      2020-04-24| thecherokeean.com|          EPU_POLICY| -2.9411764|\n|20200605094500-T2197|      2020-06-05|     people.com.cn|WB_635_PUBLIC_HEALTH|  -4.661017|\n|20201201210000-T2093|      2020-12-01|         globo.com|    WB_470_EDUCATION|   4.733728|\n+--------------------+----------------+------------------+--------------------+-----------+\nonly showing top 20 rows\n\n\u001b[1m\u001b[34mdfQ3Themes\u001b[0m: \u001b[1m\u001b[32morg.apache.spark.sql.DataFrame\u001b[0m = [gkg_record_id: string, publication_date: date ... 3 more fields]\n"
+          }
+        ]
+      },
+      "apps": [],
+      "runtimeInfos": {},
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1611496264481_878519917",
+      "id": "paragraph_1611272242955_206980788",
+      "dateCreated": "2021-01-24T14:51:04+0100",
+      "status": "READY",
+      "$$hashKey": "object:3058"
+    },
+    {
+      "text": "dfQ3Themes.printSchema()",
+      "user": "anonymous",
+      "dateUpdated": "2021-01-24T14:51:04+0100",
+      "progress": 0,
+      "config": {
+        "editorSetting": {
+          "language": "scala",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12,
+        "editorMode": "ace/mode/scala",
+        "fontSize": 9,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "root\n |-- gkg_record_id: string (nullable = true)\n |-- publication_date: date (nullable = true)\n |-- source_name: string (nullable = true)\n |-- themes: string (nullable = true)\n |-- tone: double (nullable = true)\n\n"
+          }
+        ]
+      },
+      "apps": [],
+      "runtimeInfos": {},
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1611496264481_1075364333",
+      "id": "paragraph_1611272246091_-583760210",
+      "dateCreated": "2021-01-24T14:51:04+0100",
+      "status": "READY",
+      "$$hashKey": "object:3059"
+    },
+    {
+      "text": "connector.withSessionDo { session =>\n  session.execute(\"CREATE KEYSPACE IF NOT EXISTS gdelt WITH REPLICATION = {'class': 'SimpleStrategy', 'replication_factor': 3 }\")\n  session.execute(\"USE gdelt\")\n  session.execute(\"DROP TABLE IF EXISTS q3themes\")\n  session.execute(\"CREATE TABLE q3themes (gkg_record_id text, publication_date date, source_name text, themes text, tone double, PRIMARY KEY((publication_date), gkg_record_id)) WITH CLUSTERING ORDER BY (gkg_record_id ASC)\")\n}",
+      "user": "anonymous",
+      "dateUpdated": "2021-01-24T14:51:04+0100",
+      "progress": 0,
+      "config": {
+        "editorSetting": {
+          "language": "scala",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12,
+        "editorMode": "ace/mode/scala",
+        "fontSize": 9,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "\u001b[1m\u001b[34mres87\u001b[0m: \u001b[1m\u001b[32mcom.datastax.oss.driver.api.core.cql.ResultSet\u001b[0m = com.datastax.oss.driver.internal.core.cql.SinglePageResultSet@534c8871\n"
+          }
+        ]
+      },
+      "apps": [],
+      "runtimeInfos": {},
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1611496264481_1472498714",
+      "id": "paragraph_1611272646712_-1300999861",
+      "dateCreated": "2021-01-24T14:51:04+0100",
+      "status": "READY",
+      "$$hashKey": "object:3060"
+    },
+    {
+      "text": "dfQ3Themes.write.format(\"org.apache.spark.sql.cassandra\")\n  .options(Map(\"table\" -> \"q3themes\", \"keyspace\" -> \"gdelt\"))\n  .mode(\"append\")\n  .save()",
+      "user": "anonymous",
+      "dateUpdated": "2021-01-24T14:51:04+0100",
+      "progress": 0,
+      "config": {
+        "editorSetting": {
+          "language": "scala",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12,
+        "editorMode": "ace/mode/scala",
+        "fontSize": 9,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "apps": [],
+      "runtimeInfos": {},
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1611496264481_882471781",
+      "id": "paragraph_1611272247455_-1057165287",
+      "dateCreated": "2021-01-24T14:51:04+0100",
+      "status": "READY",
+      "$$hashKey": "object:3061"
+    },
+    {
+      "text": "val dfQ3Persons = spark.read\n    .option(\"header\",\"true\")\n    .option(\"inferSchema\", \"true\")\n    .csv(\"s3://fassier-morgan-telecom-gdelt2020/Q3Personnes/*.csv\")\n    .withColumn(\"Date\",to_date(col(\"Date\")))\n    .withColumnRenamed(\"GkgRecordID\", \"gkg_record_id\")\n    .withColumnRenamed(\"Date\", \"publication_date\")\n    .withColumnRenamed(\"SourceCommonName\", \"source_name\")\n    .withColumnRenamed(\"Persons\", \"persons\")\n    .withColumnRenamed(\"Tone\", \"tone\")\n\n\ndfQ3Persons.show()",
+      "user": "anonymous",
+      "dateUpdated": "2021-01-24T14:51:04+0100",
+      "progress": 0,
+      "config": {
+        "editorSetting": {
+          "language": "scala",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12,
+        "editorMode": "ace/mode/scala",
+        "fontSize": 9,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "+--------------------+----------------+--------------------+--------------------+-----------+\n|       gkg_record_id|publication_date|         source_name|             persons|       tone|\n+--------------------+----------------+--------------------+--------------------+-----------+\n|  20200313213000-762|      2020-03-13|     macombdaily.com|    gretchen whitmer| -2.5889966|\n|  20201112083000-602|      2020-11-12|goldcoastbulletin...|      luke cornelius| -8.1463995|\n|  20200319004500-339|      2020-03-19|            wlbt.com|            sid hill| -4.0268455|\n|  20200311221500-642|      2020-03-11|metrowestdailynew...|     ariel bernstein|  0.5813953|\n|  20201102071500-367|      2020-11-02|   wcoapensacola.com|      emmet sullivan| -1.6304348|\n|20200504150000-T1038|      2020-05-04|       informador.mx|                null|       -3.6|\n|  20201109140000-742|      2020-11-09|            ketr.org|       kamala harris|  0.5477784|\n|  20200321073000-667|      2020-03-21|          kare11.com|      frank augstein| -1.6333939|\n|  20201208060000-470|      2020-12-08|cotswoldjournal.c...|        edith bowman|   5.907173|\n| 20200403214500-1598|      2020-04-03|     mynorthwest.com|ricardo alonso-za...|-0.36014405|\n|  20201109111500-539|      2020-11-09|            kswo.com|      carlos gimenez| -6.7144136|\n|   20200320191500-85|      2020-03-20|     madrock1025.com|           edan alva|       -4.0|\n|20201015121500-T1231|      2020-10-15|noticierodigital.com|          hans kluge| -2.8716216|\n| 20200324120000-1685|      2020-03-24|        albawaba.com|bishop gianni amb...| -4.2394013|\n|  20200311030000-549|      2020-03-11|           patch.com|     karen yarbrough| -1.3661202|\n|  20200320121500-220|      2020-03-20|            wjct.org|        brad hazzard| -0.6535948|\n| 20200129034500-1182|      2020-01-29|        kontan.co.id|        mark bristow| -1.9067796|\n| 20200324190000-1211|      2020-03-24|        1025kiss.com|         rita wilson| -2.2522523|\n|  20200328133000-802|      2020-03-28|     catholicsun.org|manfred becker-hu...| -1.2784091|\n|  20201203083000-929|      2020-12-03|  thestandard.com.hk|                null|   -3.10559|\n+--------------------+----------------+--------------------+--------------------+-----------+\nonly showing top 20 rows\n\n\u001b[1m\u001b[34mdfQ3Persons\u001b[0m: \u001b[1m\u001b[32morg.apache.spark.sql.DataFrame\u001b[0m = [gkg_record_id: string, publication_date: date ... 3 more fields]\n"
+          }
+        ]
+      },
+      "apps": [],
+      "runtimeInfos": {},
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1611496264482_1508662613",
+      "id": "paragraph_1611268236713_1096003102",
+      "dateCreated": "2021-01-24T14:51:04+0100",
+      "status": "READY",
+      "$$hashKey": "object:3064"
+    },
+    {
+      "text": "dfQ3.printSchema()",
+      "user": "anonymous",
+      "dateUpdated": "2021-01-24T14:51:04+0100",
+      "progress": 0,
+      "config": {
+        "editorSetting": {
+          "language": "scala",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12,
+        "editorMode": "ace/mode/scala",
+        "fontSize": 9,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "root\n |-- gkg_record_id: string (nullable = true)\n |-- publication_date: date (nullable = true)\n |-- source_name: string (nullable = true)\n |-- persons: string (nullable = true)\n |-- tone: double (nullable = true)\n\n"
+          }
+        ]
+      },
+      "apps": [],
+      "runtimeInfos": {},
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1611496264482_2130208050",
+      "id": "paragraph_1611268900949_1417417134",
+      "dateCreated": "2021-01-24T14:51:04+0100",
+      "status": "READY",
+      "$$hashKey": "object:3065"
+    },
+    {
+      "text": "connector.withSessionDo { session =>\n  session.execute(\"CREATE KEYSPACE IF NOT EXISTS gdelt WITH REPLICATION = {'class': 'SimpleStrategy', 'replication_factor': 3 }\")\n  session.execute(\"USE gdelt\")\n  session.execute(\"DROP TABLE IF EXISTS q3persons\")\n  session.execute(\"CREATE TABLE q3persons (gkg_record_id text, publication_date date, source_name text, persons text, tone double, PRIMARY KEY((publication_date), gkg_record_id)) WITH CLUSTERING ORDER BY (gkg_record_id ASC)\")\n}",
+      "user": "anonymous",
+      "dateUpdated": "2021-01-24T14:51:04+0100",
+      "progress": 0,
+      "config": {
+        "editorSetting": {
+          "language": "scala",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12,
+        "editorMode": "ace/mode/scala",
+        "fontSize": 9,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "\u001b[1m\u001b[34mres48\u001b[0m: \u001b[1m\u001b[32mcom.datastax.oss.driver.api.core.cql.ResultSet\u001b[0m = com.datastax.oss.driver.internal.core.cql.SinglePageResultSet@2c357feb\n"
+          }
+        ]
+      },
+      "apps": [],
+      "runtimeInfos": {},
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1611496264482_88862703",
+      "id": "paragraph_1611268375502_822462820",
+      "dateCreated": "2021-01-24T14:51:04+0100",
+      "status": "READY",
+      "$$hashKey": "object:3066"
+    },
+    {
+      "text": "dfQ3Persons.write.format(\"org.apache.spark.sql.cassandra\")\n  .options(Map(\"table\" -> \"q3persons\", \"keyspace\" -> \"gdelt\"))\n  .mode(\"append\")\n  .save()",
+      "user": "anonymous",
+      "dateUpdated": "2021-01-24T14:51:04+0100",
+      "progress": 0,
+      "config": {
+        "editorSetting": {
+          "language": "scala",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12,
+        "editorMode": "ace/mode/scala",
+        "fontSize": 9,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": []
+      },
+      "apps": [],
+      "runtimeInfos": {},
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1611496264482_1877109719",
+      "id": "paragraph_1611269941415_-1685820142",
+      "dateCreated": "2021-01-24T14:51:04+0100",
+      "status": "READY",
+      "$$hashKey": "object:3067"
+    },
+    {
+      "text": "val dfQ3Lieux = spark.read\n    .option(\"header\",\"true\")\n    .option(\"inferSchema\", \"true\")\n    .csv(\"s3://fassier-morgan-telecom-gdelt2020/Q3Lieux/*.csv\")\n    .withColumn(\"Date\",to_date(col(\"Date\")))\n    .withColumnRenamed(\"GkgRecordID\", \"gkg_record_id\")\n    .withColumnRenamed(\"Date\", \"publication_date\")\n    .withColumnRenamed(\"SourceCommonName\", \"source_name\")\n    .withColumnRenamed(\"Locations\", \"location\")\n    .withColumnRenamed(\"Tone\", \"tone\")\n    \ndfQ3Lieux.show()",
+      "user": "anonymous",
+      "dateUpdated": "2021-01-24T14:51:04+0100",
+      "progress": 0,
+      "config": {
+        "editorSetting": {
+          "language": "scala",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12,
+        "editorMode": "ace/mode/scala",
+        "fontSize": 9,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "+--------------------+----------------+--------------------+--------------------+-----------+\n|       gkg_record_id|publication_date|         source_name|            location|       tone|\n+--------------------+----------------+--------------------+--------------------+-----------+\n| 20200814210000-T106|      2020-08-14|braunschweiger-ze...|4#Sylt, Schleswig...| -1.4253136|\n| 20200807020000-1109|      2020-08-07|            kvor.com|1#United States#U...|  -2.601156|\n|20200318030000-T1156|      2020-03-18|              qq.com|1#United States#U...|       -0.8|\n|  20200826053000-278|      2020-08-26| washingtontimes.com|3#Washington, Was...|  -5.942623|\n| 20200214160000-1702|      2020-02-14|        laosnews.net|4#New Delhi, Delh...|  -8.403361|\n|   20200215023000-71|      2020-02-15|          kfvs12.com|1#Japan#JA#JA#36#...|  -8.085107|\n|  20200301064500-750|      2020-03-01|             msn.com|1#Thailand#TH#TH#...|  -8.095238|\n|  20200306083000-288|      2020-03-06|      newscenter1.tv|3#Washington, Was...| -1.4869889|\n| 20200318210000-1246|      2020-03-18|     wickedlocal.com|1#United States#U...| -2.3017902|\n| 20200324230000-1670|      2020-03-24|         937kclb.com|2#Florida, United...|-0.28011206|\n|  20200406191500-116|      2020-04-06|        albawaba.com|1#Lebanon#LE#LE#3...|   -9.72973|\n| 20200426230000-1062|      2020-04-26|             tdn.com|4#Dalmine, Lombar...| -3.0612245|\n|  20200502041500-544|      2020-05-02|         news.com.au|3#Roseville, Cali...| -4.1044774|\n|  20200508041500-324|      2020-05-08|    ncnewsonline.com|2#Nebraska, Unite...| -3.6978757|\n|  20200510164500-591|      2020-05-10|            kalb.com|4#Paris, France (...| -0.5328597|\n|  20200512130000-607|      2020-05-12|         reuters.com|1#France#FR#FR#46...| -3.2667878|\n|  20200512160000-619|      2020-05-12|     5newsonline.com|3#Boston, Massach...|   2.631579|\n|  20200513160000-808|      2020-05-13|      timesargus.com|1#Switzerland#SZ#...| -2.7777777|\n| 20200601183000-2227|      2020-06-01|       globalnews.ca|2#Washington, Uni...|  -7.369942|\n| 20200616094500-1024|      2020-06-16|       ibtimes.co.uk|4#Ganghwa, Inch'o...|  -5.222437|\n+--------------------+----------------+--------------------+--------------------+-----------+\nonly showing top 20 rows\n\n\u001b[1m\u001b[34mdfQ3Lieux\u001b[0m: \u001b[1m\u001b[32morg.apache.spark.sql.DataFrame\u001b[0m = [gkg_record_id: string, publication_date: date ... 3 more fields]\n"
+          }
+        ]
+      },
+      "apps": [],
+      "runtimeInfos": {},
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1611496264483_1404856982",
+      "id": "paragraph_1611271255248_-1265949509",
+      "dateCreated": "2021-01-24T14:51:04+0100",
+      "status": "READY",
+      "$$hashKey": "object:3070"
+    },
+    {
+      "text": "dfQ3Lieux.printSchema()",
+      "user": "anonymous",
+      "dateUpdated": "2021-01-24T14:51:04+0100",
+      "progress": 0,
+      "config": {
+        "editorSetting": {
+          "language": "scala",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12,
+        "editorMode": "ace/mode/scala",
+        "fontSize": 9,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "root\n |-- gkg_record_id: string (nullable = true)\n |-- publication_date: date (nullable = true)\n |-- source_name: string (nullable = true)\n |-- persons: string (nullable = true)\n |-- tone: double (nullable = true)\n\n"
+          }
+        ]
+      },
+      "apps": [],
+      "runtimeInfos": {},
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1611496264484_17240036",
+      "id": "paragraph_1611274431271_-1704627955",
+      "dateCreated": "2021-01-24T14:51:04+0100",
+      "status": "READY",
+      "$$hashKey": "object:3071"
+    },
+    {
+      "text": "connector.withSessionDo { session =>\n  session.execute(\"CREATE KEYSPACE IF NOT EXISTS gdelt WITH REPLICATION = {'class': 'SimpleStrategy', 'replication_factor': 3 }\")\n  session.execute(\"USE gdelt\")\n  session.execute(\"DROP TABLE IF EXISTS q3locations\")\n  session.execute(\"CREATE TABLE q3locations (gkg_record_id text, publication_date date, source_name text, location text, tone double, PRIMARY KEY((publication_date), gkg_record_id)) WITH CLUSTERING ORDER BY (gkg_record_id ASC)\")\n}",
+      "user": "anonymous",
+      "dateUpdated": "2021-01-24T14:51:04+0100",
+      "progress": 0,
+      "config": {
+        "editorSetting": {
+          "language": "scala",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12,
+        "editorMode": "ace/mode/scala",
+        "fontSize": 9,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "\u001b[1m\u001b[34mres65\u001b[0m: \u001b[1m\u001b[32mcom.datastax.oss.driver.api.core.cql.ResultSet\u001b[0m = com.datastax.oss.driver.internal.core.cql.SinglePageResultSet@55a107d8\n"
+          }
+        ]
+      },
+      "apps": [],
+      "runtimeInfos": {},
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1611496264484_474283424",
+      "id": "paragraph_1611274627340_-409112767",
+      "dateCreated": "2021-01-24T14:51:04+0100",
+      "status": "READY",
+      "$$hashKey": "object:3072"
+    },
+    {
+      "text": "dfQ3Lieux.write.format(\"org.apache.spark.sql.cassandra\")\n  .options(Map(\"table\" -> \"q3locations\", \"keyspace\" -> \"gdelt\"))\n  .mode(\"append\")\n  .save()",
+      "user": "anonymous",
+      "dateUpdated": "2021-01-24T14:51:04+0100",
+      "progress": 0,
+      "config": {
+        "editorSetting": {
+          "language": "scala",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12,
+        "editorMode": "ace/mode/scala",
+        "fontSize": 9,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": []
+      },
+      "apps": [],
+      "runtimeInfos": {},
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1611496264484_1970578255",
+      "id": "paragraph_1611274720885_1983213926",
+      "dateCreated": "2021-01-24T14:51:04+0100",
+      "status": "READY",
+      "$$hashKey": "object:3073"
+    }
+  ],
+  "name": "S3toCassandra",
+  "id": "2FYA2BGCF",
+  "defaultInterpreterGroup": "spark",
+  "version": "0.9.0",
+  "noteParams": {},
+  "noteForms": {},
+  "angularObjects": {},
+  "config": {
+    "isZeppelinNotebookCronEnable": false,
+    "looknfeel": "default",
+    "personalizedMode": "false"
+  },
+  "info": {},
+  "path": "/S3toCassandra"
+}
