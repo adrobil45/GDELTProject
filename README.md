@@ -109,4 +109,8 @@ Finaly, we select the features we want to use for each question Q1, Q2, Q3Themes
 
 ### Writing to the Cassandra Cluster
 
+See: [Notebook S3toCassandra](notebooks/S3toCassandra.zpln)
+
 ### Queries
+
+See: [Notebook CassandraQueries](notebooks/CassandraQueries.zpln)
