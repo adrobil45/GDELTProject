@@ -30,6 +30,7 @@ In this project we aim to answer the following :
 + #### Terraform
 + #### Ansible
 
+## Data Preparation
 ### Cassandra Tables
 
 + __Replication Strategy:__ SimpleStrategy
@@ -91,19 +92,19 @@ __Table 3__:
 
 ### ETLs for data preparation
 
-We have two files as input files :
+We have two files as inputs :
 + [masterfile.txt](http://data.gdeltproject.org/gdeltv2/masterfilelist.txt) for articles in english
 + [masterfile-translation.txt](http://data.gdeltproject.org/gdeltv2/masterfilelist-translation.txt) for articles in other languages
 
-Those input files leads us lots of zip files that we put in an S3 bucket (see [spark code uploading data to S3](notebooks/uploadDataToS3.zpln)) and with those files we create 6 dataframes :
+Those input files contain urls that allow us to download all news media data from GDELT that we upload to an S3 bucket (see [spark code uploading data to S3](notebooks/uploadDataToS3.zpln)). With those files we create 6 dataframes :
 + 3 for the english ones : events, mentions and gkg
-+ and similarly for those in another language
++ 3 for those in another language
 
-We then make the union between english and translation. Which brings us to 3 dataframes (events, mentions and gkg).
+We then set the union between english and translation dataframes, leaving us with 3 respectively concatenated dataframes (events, mentions and gkg).
 
-The guidelines ask us to work with the data for the year 2020 and only on articles mentionning the COVID-19 (we can find the entire list of themes [here](documentation/themes.txt)). Thus, we filtered according to these requests.
+Given the project scope, we then filtered articles relating only to the COVID-19 pandemic (we can find the entire list of themes [here](documentation/themes.txt)).
 
-Finaly, we select the features we want to use for each question Q1, Q2, Q3Themes, Q3Personnes and Q3Lieux (see [spark code processing data to S3](notebooks/processedDataToS3.zpln) to have a more detailed explanation of which features we take and how we do it) and create a dataframe for each question. We put them in an S3 bucket as csv files.
+Finally, we selected the features for each question Q1, Q2, Q3Themes, Q3Personnes and Q3Lieux (see [spark code processing data to S3](notebooks/processedDataToS3.zpln) to have a more detailed explanation of which features we take and how we do it). After setting up the required dataframes, they are converted to csv files and uploaded to an S3 bucket for reuse. It is important to note that we worked on AWS Educate accounts and therefore dealt with many constraints, most notably relating to budget.
 
 ![ETL](images/ETL.png)
 
@@ -115,15 +116,15 @@ See: [Notebook S3toCassandra](notebooks/S3toCassandra.zpln)
 
 See: [Notebook CassandraQueries](notebooks/CassandraQueries.zpln)
 
-### Openning on "Do we observe a pattern that could identify another pandemic / pandemic wave ?"
+### Opening on "Do we observe a pattern that could identify another pandemic / pandemic wave ?"
 
-To see if there is a pattern that can help us prevent another pandemic / pandemic wave, we take a look a the number of articles per day talking about the COVID-19 and the average tone of those articles per day. See below.
+To see if we could identify a pattern, we take a look a the number of articles per day talking about the COVID-19 and the average tone of those articles per day. See below.
 
 ![Count of articles / day](images/q4_count_articles.png)
 ![Average tone / day](images/q4_avg_tone.png)
 
-Those plots indicates some usefull informations we can use to predict / prevent another pandemic. Indeed we can see a huge evolution during the first few weeks in january / february / march :
-+ increasing number of articles talking about the COVID-19 / day : from 0 -> 100 000 in the end of january -> 440 000 in march
-+ increasing average tone / day : from -6 in january to a stabilized value of -2 after march
+The plots shown above put forth useful information. In fact, during the first few weeks in january / february / march we can identify the following:
++ an increase in the number of articles talking about the COVID-19 / day : from 0 -> 100 000 in the end of january -> 440 000 in march
++ an increase in the average tone / day : from -6 in january to a stabilized value of -2 after march
 
 We can also perhaps predict / prevent another pandemic wave using the 1st plot. Mid-november we clearly see the 2nd pandemic wave due to the COVID-19.
