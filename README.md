@@ -25,12 +25,73 @@ In this project we aim to answer the following :
 
 ![Architecture](images/Architecture.png)
 
-### Setting up the environment
+## Setting up the environment
 ### Deployment of resources on AWS
 + #### Terraform
 + #### Ansible
-### Cassandra data model
+
+### Cassandra Tables
+
++ __Replication Strategy:__ SimpleStrategy
++ __Replication Factor:__ 3
+
+The following tables have been designed with the idea that their content will be used within Spark for computations such as counts, averages and aggregations etc...
+
+Otherwise, to see how the tables would be designed and queried within cqlsh, you can take a look at the [presentation](presentation.pdf) (slides 6, 7, 8).
+
+__Table 1__:
+
+    CREATE TABLE q1 (
+        event_id int, 
+        mention_date date, 
+        mention_id text, 
+        language text, 
+        country_code text, 
+        PRIMARY KEY(mention_date, country_code, language, mention_id))
+
+__Table 2__:
+
+    CREATE TABLE q2 (
+        event_id int, 
+        mention_id text, 
+        event_date date, 
+        country_code text, 
+        PRIMARY KEY((event_date, country_code), mention_id))
+
+__Table 3__:
+
+    CREATE TABLE q3themes (
+        gkg_record_id text, 
+        publication_date date, 
+        source_name text, 
+        themes text, 
+        tone double, 
+        PRIMARY KEY((publication_date), gkg_record_id)) 
+        WITH CLUSTERING ORDER BY (gkg_record_id ASC)
+
+    CREATE TABLE q3persons (
+        gkg_record_id text, 
+        publication_date date, 
+        source_name text, 
+        persons text, 
+        tone double, 
+        PRIMARY KEY((publication_date), gkg_record_id)) 
+        WITH CLUSTERING ORDER BY (gkg_record_id ASC)
+
+    CREATE TABLE q3locations (
+        gkg_record_id text, 
+        publication_date date, 
+        source_name text, 
+        location text, 
+        tone double, 
+        PRIMARY KEY((publication_date), gkg_record_id)) 
+        WITH CLUSTERING ORDER BY (gkg_record_id ASC)
+
+
+
 ### ETLs for data preparation
 ![ETL](images/ETL.png)
+
 ### Writing to the Cassandra Cluster
+
 ### Queries
