@@ -11,7 +11,7 @@ In this project we aim to answer the following :
 + How many articles and events are related to the COVID-19 pandemic, grouped by day, country and language ?
 + For a given country, list all events that have taken place sorted by how many times they were mentioned, grouped by _yyyy, yyyy-mm or yyyy-mm-dd_.
 + For a given source (gkg.SourceCommonName), list the average tone and number of articles associated with each theme, person and location, grouped by _yyyy, yyyy-mm or yyyy-mm-dd_.
-+ Do we observe a pattern that could identify another pandemic wave ?
++ Do we observe a pattern that could identify another pandemic / pandemic wave ?
 
 ## Technologies Used
 
@@ -114,3 +114,16 @@ See: [Notebook S3toCassandra](notebooks/S3toCassandra.zpln)
 ### Queries
 
 See: [Notebook CassandraQueries](notebooks/CassandraQueries.zpln)
+
+### Openning on "Do we observe a pattern that could identify another pandemic / pandemic wave ?"
+
+To see if there is a pattern that can help us prevent another pandemic / pandemic wave, we take a look a the number of articles per day talking about the COVID-19 and the average tone of those articles per day. See below.
+
+![Count of articles / day](images/q4_count_articles.png)
+![Average tone / day](images/q4_avg_tone.png)
+
+Those plots indicates some usefull informations we can use to predict / prevent another pandemic. Indeed we can see a huge evolution during the first few weeks in january / february / march :
++ increasing number of articles talking about the COVID-19 / day : from 0 -> 100 000 in the end of january -> 440 000 in march
++ increasing average tone / day : from -6 in january to a stabilized value of -2 after march
+
+We can also perhaps predict / prevent another pandemic wave using the 1st plot. Mid-november we clearly see the 2nd pandemic wave due to the COVID-19.
