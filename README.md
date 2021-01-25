@@ -90,6 +90,21 @@ __Table 3__:
 
 
 ### ETLs for data preparation
+
+We have two files as input files :
++ [masterfile.txt](http://data.gdeltproject.org/gdeltv2/masterfilelist.txt) for articles in english
++ [masterfile-translation.txt](http://data.gdeltproject.org/gdeltv2/masterfilelist-translation.txt) for articles in other languages
+
+Those input files leads us lots of zip files that we put in an S3 bucket (see [spark code uploading data to S3](uploadDataToS3.zpln)) and with those files we create 6 dataframes :
++ 3 for the english ones : events, mentions and gkg
++ and similarly for those in another language
+
+We then make the union between english and translation. Which brings us to 3 dataframes (events, mentions and gkg).
+
+The guidelines ask us to work with the data for the year 2020 and only on articles mentionning the COVID-19 (we can find the entire list of themes [here](documentation/themes.txt)). Thus, we filtered according to these requests.
+
+Finaly, we select the features we want to use for each question Q1, Q2, Q3Themes, Q3Personnes and Q3Lieux (see [spark code processing data to S3](notebooks/processedDataToS3.zpln) to have a more detailed explanation of which features we take and how we do it) and create a dataframe for each question. We put them in an S3 bucket as csv files.
+
 ![ETL](images/ETL.png)
 
 ### Writing to the Cassandra Cluster
