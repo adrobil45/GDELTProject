@@ -95,7 +95,7 @@ We have two files as input files :
 + [masterfile.txt](http://data.gdeltproject.org/gdeltv2/masterfilelist.txt) for articles in english
 + [masterfile-translation.txt](http://data.gdeltproject.org/gdeltv2/masterfilelist-translation.txt) for articles in other languages
 
-Those input files leads us lots of zip files that we put in an S3 bucket (see [spark code uploading data to S3](uploadDataToS3.zpln)) and with those files we create 6 dataframes :
+Those input files leads us lots of zip files that we put in an S3 bucket (see [spark code uploading data to S3](notebooks/uploadDataToS3.zpln)) and with those files we create 6 dataframes :
 + 3 for the english ones : events, mentions and gkg
 + and similarly for those in another language
 
