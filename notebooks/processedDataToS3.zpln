@@ -1,0 +1,361 @@
+﻿{
+  "paragraphs": [
+    {
+      "text": "%md\n####**We take the zip files from Ernest's S3 bucket then process the data to create as many dataframes as needed to answer the asked questions :**\n\n>1. Afficher le nombre d’articles/évènements qui parlent de COVID qu’il y a eu pour chaque triplet (jour, pays de\nl’évènement, langue de l’article) -> ***Q1***\n2. Pour un pays donné en paramètre, affichez les évènements qui y ont eu place triés par le nombre de mentions (tri\ndécroissant); permettez une agrégation par jour/mois/année -> ***Q2***\n3. Pour une source de données passée en paramètre (gkg.SourceCommonName) affichez les thèmes, personnes, lieux dont\nles articles de cette sources parlent ainsi que le le nombre d’articles et le ton moyen des articles (pour chaque\nthème/personne/lieu); permettez une agrégation par jour/mois/année -> ***Q3Themes, Q3Personnes, Q3Lieux***\n4. Est-ce qu’on observe des patterns dans l’évolution qui pourraient nous permettre d’identifier la prochaine\nvague/pandémie ? -> ***Q4***\n\n####**Then, we put those dataframes to Morgan's S3 Bucket as csv files**",
+      "user": "anonymous",
+      "dateUpdated": "2021-01-25T11:04:02+0000",
+      "config": {
+        "colWidth": 12,
+        "fontSize": 9,
+        "enabled": false,
+        "results": {},
+        "editorSetting": {
+          "language": "text",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "editorMode": "ace/mode/text",
+        "editorHide": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "HTML",
+            "data": "<h4><strong>We take the zip files from Ernest's S3 bucket then process the data to create as many dataframes as needed to answer the asked questions :</strong></h4>\n<blockquote><ol>\n<li>Afficher le nombre d’articles/évènements qui parlent de COVID qu’il y a eu pour chaque triplet (jour, pays de\n<br  />l’évènement, langue de l’article) -> <strong><em>Q1</em></strong></li>\n<li>Pour un pays donné en paramètre, affichez les évènements qui y ont eu place triés par le nombre de mentions (tri\n<br  />décroissant); permettez une agrégation par jour/mois/année -> <strong><em>Q2</em></strong></li>\n<li>Pour une source de données passée en paramètre (gkg.SourceCommonName) affichez les thèmes, personnes, lieux dont\n<br  />les articles de cette sources parlent ainsi que le le nombre d’articles et le ton moyen des articles (pour chaque\n<br  />thème/personne/lieu); permettez une agrégation par jour/mois/année -> <strong><em>Q3Themes, Q3Personnes, Q3Lieux</em></strong></li>\n<li>Est-ce qu’on observe des patterns dans l’évolution qui pourraient nous permettre d’identifier la prochaine\n<br  />vague/pandémie ? -> <strong><em>Q4</em></strong></li>\n</ol>\n</blockquote>\n<h4><strong>Then, we put those dataframes to Morgan's S3 Bucket as csv files</strong></h4>\n"
+          }
+        ]
+      },
+      "apps": [],
+      "runtimeInfos": {},
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1611571611463_1951096931",
+      "id": "paragraph_1611571611463_1951096931",
+      "dateCreated": "2021-01-25T10:46:51+0000",
+      "dateStarted": "2021-01-25T11:03:58+0000",
+      "dateFinished": "2021-01-25T11:03:58+0000",
+      "status": "FINISHED",
+      "focus": true,
+      "$$hashKey": "object:259"
+    },
+    {
+      "title": "Import and function definition",
+      "text": "import java.io.BufferedReader\nimport java.io.InputStreamReader\nimport org.apache.spark.input.PortableDataStream\nimport java.util.zip.ZipInputStream\n\n\ndef readZip(path: String, translation: Int) = {\n    /*\n    Create a RDD with the zip files found in Ernest's S3 bucket\n    */\n    \n    var rddTemp = sc.binaryFiles(path)\n    if (translation == 0) { // we filter two files which are corrupted in the masterfile.txt (error \"java.io.EOFException: Unexpected end of ZLIB input stream\") for Ernest's S3 bucket zip files\n        rddTemp = rddTemp.filter(x => x._1 != \"s3://majdalani-ernest-telecom-gdelt2020/eng/20200125143000.mentions.CSV.zip\").filter(x => x._1 != \"s3://majdalani-ernest-telecom-gdelt2020/eng/20200121110000.export.CSV.zip\")\n    }\n    \n    val rdd = rddTemp.flatMap {  // decompresser les fichiers\n                    case (name: String, content: PortableDataStream) =>\n                        val zis = new ZipInputStream(content.open())\n                        Stream.continually(zis.getNextEntry())\n                            .takeWhile {\n                                case null => zis.closeEntry(); zis.close(); false \n                                case _ => true\n                            }\n                            .flatMap { _ =>\n                                val br = new BufferedReader(new InputStreamReader(zis))\n                                Stream.continually(br.readLine()).takeWhile(_ != null)\n                            } \n    } \n    rdd\n}\n\n\ndef read(dir: String, translation: Int) = {\n    /*\n    Create 3 dataframes (event, mentions, gkg) from zip files found in Ernest's S3 bucket (for Q1, Q2, Q3Themes, Q3Personnes, Q3Lieux)\n    */\n    \n    val event = readZip(dir + \"*.export.CSV.zip\", translation).map(_.split(\"\\t\"))\n                                                              .filter(_.length == 61) // verify if good length\n                                                              .map(x => (x(0), x(1), x(53))) // selection of usefull columns \n                                                              .filter(x => (x._1 != \"\") && (x._2 != \"\")) // don't want GlobalEventID and EventDate to be equal to \"\"\n                                                              .toDF(\"GlobalEventID\", \"EventDate\", \"ActionGeo_CountryCode\") \n                                                              .withColumn(\"GlobalEventID\", col(\"GlobalEventID\").cast(\"Int\")) // from String to Int\n    \n    var n = 14\n    if (translation == 1) { n = 15 } // in case masterfile-translation.txt -> length : 15 and not 14\n    val mentions = readZip(dir + \"*.mentions.CSV.zip\", translation).map(_.split(\"\\t\"))\n                                                                   .filter(_.length == n) // verify if good length\n                                                                   .map(x => if (translation == 0) (x(0), x(2), x(5), \"eng\") else (x(0), x(2), x(5), x(14).split(\";\")(0).split(\":\")(1))) // selection of usefull columns\n                                                                   .filter(x => (x._1 != \"\") && (x._2 != \"\") && (x._3 != \"\")) // don't want GlobalEventID, MentionTimeDate and MentionIdentifier to be equal to \"\"\n                                                                   .toDF(\"GlobalEventID\", \"MentionTimeDate\", \"MentionIdentifier\", \"MentionDocTranslationInfo\")\n                                                                   .withColumn(\"GlobalEventID\", col(\"GlobalEventID\").cast(\"Int\")) // from String to Int\n    \n    val gkg = readZip(dir + \"*.gkg.csv.zip\", translation).map(_.split(\"\\t\"))\n                                                         .filter(_.length == 27) // verify if good length\n                                                         .map(x => (x(0), x(1), x(3), x(4), x(7), x(9), x(11), x(15))) // selection of usefull columns \n                                                         .filter(x => (x._1 != \"\")  && (x._2 != \"\") && (x._4 != \"\") && (x._8 != \"\")) // don't want GkgRecordID, Date, DocumentIdentifier and Tone to be equal to \"\"\n                                                         .toDF(\"GkgRecordID\", \"Date\", \"SourceCommonName\", \"DocumentIdentifier\", \"Themes\", \"Locations\", \"Persons\", \"Tone\")\n                                                         .withColumn(\"Tone\", split($\"Tone\", \",\")(0).cast(\"Float\")) // from String to Float\n    (event, mentions, gkg) // 3 dataframes\n}\n\n\ndef read_q4(dir: String, translation: Int) = {\n    /*\n    Create a dataframe (gkg) from zip files found in Ernest's S3 bucket (for Q4)\n    */\n    val gkg = readZip(dir + \"*.gkg.csv.zip\", translation).map(_.split(\"\\t\"))\n                                                         .filter(_.length == 27) // verify if good length\n                                                         .map(x => (x(0), x(1), x(3), x(4), {\n                                                            val y = x(8).split(\";\").map(_.split(\",\")(0)).toSeq\n                                                            y.groupBy(identity).map(x => (x._1, x._2.length))\n                                                         }, x(15))) // selection of usefull columns (modification of themes (x(8)) = dictionnary key: value -> theme: countTheme)\n                                                         .filter(x => (x._1 != \"\")  && (x._2 != \"\") && (x._4 != \"\") && (x._6 != \"\")) // don't want GkgRecordID, Date, DocumentIdentifier and Tone to be equal to \"\"\n                                                         .toDF(\"GkgRecordID\", \"Date\", \"SourceCommonName\", \"DocumentIdentifier\", \"Themes\", \"Tone\")\n                                                         .withColumn(\"Tone\", split($\"Tone\", \",\")(0).cast(\"Float\")) // from String to Float\n                                                         .withColumn(\"Date\", to_date(col(\"Date\").cast(\"String\").substr(0,8), \"yyyyMMdd\")) // from String to date\n    gkg\n}",
+      "user": "anonymous",
+      "dateUpdated": "2021-01-25T11:30:01+0000",
+      "config": {
+        "editorSetting": {
+          "language": "scala",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12,
+        "editorMode": "ace/mode/scala",
+        "fontSize": 9,
+        "results": {},
+        "enabled": true,
+        "title": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "import java.io.BufferedReader\nimport java.io.InputStreamReader\nimport org.apache.spark.input.PortableDataStream\nimport java.util.zip.ZipInputStream\n\u001b[1m\u001b[34mreadZip\u001b[0m: \u001b[1m\u001b[32m(path: String, translation: Int)org.apache.spark.rdd.RDD[String]\u001b[0m\n\u001b[1m\u001b[34mread\u001b[0m: \u001b[1m\u001b[32m(dir: String, translation: Int)(org.apache.spark.sql.DataFrame, org.apache.spark.sql.DataFrame, org.apache.spark.sql.DataFrame)\u001b[0m\n\u001b[1m\u001b[34mread_q4\u001b[0m: \u001b[1m\u001b[32m(dir: String, translation: Int)org.apache.spark.sql.DataFrame\u001b[0m\n"
+          }
+        ]
+      },
+      "apps": [],
+      "runtimeInfos": {},
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1611569886794_-354935873",
+      "id": "paragraph_1611521688585_584069482",
+      "dateCreated": "2021-01-25T10:18:06+0000",
+      "status": "FINISHED",
+      "$$hashKey": "object:260",
+      "dateFinished": "2021-01-25T11:30:02+0000",
+      "dateStarted": "2021-01-25T11:30:01+0000"
+    },
+    {
+      "text": "// create english and translation dataframes from data in Ernest's S3 bucket\nval dfEng = read(\"s3://majdalani-ernest-telecom-gdelt2020/eng/2020*\", 0) // to modify\nval dfTranslation = read(\"s3://majdalani-ernest-telecom-gdelt2020/translation/2020*\", 1) // to modify\n\n\n// create event, mentions and gkg dataframes from the union between english ones and translation ones\nval dfEvent = dfEng._1.unionAll(dfTranslation._1)\nval dfMentions = dfEng._2.unionAll(dfTranslation._2)\nval dfGkg = dfEng._3.unionAll(dfTranslation._3)\n\n\n// selection of articles about covid\nval themesCovid = List(\"TAX_DISEASE_CORONAVIRUS\", \"TAX_DISEASE_CORONAVIRUSES\", \"TAX_DISEASE_CORONAVIRUS_INFECTIONS\") // cf : http://data.gdeltproject.org/api/v2/guides/LOOKUP-GKGTHEMES.TXT\nval dfGkgCovid = dfGkg.filter(x => {\n                                val y = x(4).toString.split(\";\")\n                                y.contains(themesCovid(0)) || y.contains(themesCovid(1)) || y.contains(themesCovid(2)) })\n                      .distinct()\n\nval dfMentionsCovid = dfMentions.join(dfGkgCovid.select(\"DocumentIdentifier\"), dfGkgCovid(\"DocumentIdentifier\") ===  dfMentions(\"MentionIdentifier\"), \"inner\")\n                                .drop(\"DocumentIdentifier\")\n                                .distinct()\n\nval dfEventCovid = dfEvent.join(dfMentionsCovid.select(\"GlobalEventID\"), \"GlobalEventID\")\n                            .distinct()\n\n\n// 1st query (Q1) : join mentions and event -> GlobalEventID, MentionTimeDate, MentionIdentifier, MentionDocTranslationInfo, ActionGeo_CountryCode\nval dfQ1 = dfMentionsCovid.select(\"GlobalEventID\", \"MentionTimeDate\", \"MentionIdentifier\", \"MentionDocTranslationInfo\")\n                          .withColumn(\"MentionTimeDate\", to_date(col(\"MentionTimeDate\").cast(\"String\").substr(0,8), \"yyyyMMdd\")) // from String to date (yyyyMMdd... to yyyyMMdd)\n                          .join(dfEventCovid.select(\"GlobalEventID\", \"ActionGeo_CountryCode\"), \"GlobalEventID\")\n                          .distinct()\n\n\n// 2nd query (Q2) : join mentions and event -> GlobalEventID, MentionIdentifier, EventDate, ActionGeo_CountryCode\nval dfQ2 = dfMentionsCovid.select(\"GlobalEventID\", \"MentionIdentifier\")\n                          .join(dfEventCovid.select(\"GlobalEventID\", \"EventDate\", \"ActionGeo_CountryCode\"), \"GlobalEventID\") \n                          .withColumn(\"EventDate\", to_date(col(\"EventDate\").cast(\"String\"), \"yyyyMMdd\")) // from String to date\n                          .distinct()\n\n\n// 3rd query (Q3Themes, Q3Personnes, Q3Lieux) -> GkgRecordID, Date, SourceCommonName, Themes/Persons/Locations, Tone\nval dfQ3Themes = dfGkgCovid.select(\"GkgRecordID\", \"Date\", \"SourceCommonName\", \"Themes\", \"Tone\")\n                           .withColumn(\"Date\", to_date(col(\"Date\").cast(\"String\").substr(0,8), \"yyyyMMdd\")) // from String to date (yyyyMMdd... to yyyyMMdd)\n                           .withColumn(\"Tone\", split($\"Tone\", \",\")(0).cast(\"Float\")) // from String to Float \n                           .withColumn(\"Themes\", split($\"Themes\", \";\")) // from String to List splitted by \";\"\n                           .withColumn(\"Themes\", explode($\"Themes\")) // explode the Themes list\n                           .distinct()\nval dfQ3Personnes = dfGkgCovid.select(\"GkgRecordID\", \"Date\", \"SourceCommonName\", \"Persons\", \"Tone\")\n                              .withColumn(\"Date\", to_date(col(\"Date\").cast(\"String\").substr(0,8), \"yyyyMMdd\")) // from String to date (yyyyMMdd... to yyyyMMdd)\n                              .withColumn(\"Tone\", split($\"Tone\", \",\")(0).cast(\"Float\")) // from String to Float\n                              .withColumn(\"Persons\", split($\"Persons\", \";\")) // from String to List splitted by \";\"\n                              .withColumn(\"Persons\", explode($\"Persons\")) // explode the Persons List\n                              .distinct()\nval dfQ3Lieux = dfGkgCovid.select(\"GkgRecordID\", \"Date\", \"SourceCommonName\", \"Locations\", \"Tone\")\n                          .withColumn(\"Date\", to_date(col(\"Date\").cast(\"String\").substr(0,8), \"yyyyMMdd\")) // from String to date (yyyyMMdd... to yyyyMMdd)\n                          .withColumn(\"Tone\", split($\"Tone\", \",\")(0).cast(\"Float\")) // from String to Float\n                          .withColumn(\"Locations\", split($\"Locations\", \";\")) // from String to List splitted by \";\"\n                          .withColumn(\"Locations\", explode($\"Locations\")) // explode the Locations List\n                          .distinct()\n\n\n// Be carefull it runs for a while (enable run if willing to process data and put dataframes as csv to a S3 bucket)\ndfQ1.write.format(\"csv\").option(\"header\",\"true\").mode(\"Overwrite\").save(\"s3://fassier-morgan-telecom-gdelt2020/Q1\")\ndfQ2.write.format(\"csv\").option(\"header\",\"true\").mode(\"Overwrite\").save(\"s3://fassier-morgan-telecom-gdelt2020/Q2\")\ndfQ3Themes.write.format(\"csv\").option(\"header\",\"true\").mode(\"Overwrite\").save(\"s3://fassier-morgan-telecom-gdelt2020/Q3Themes\")\ndfQ3Personnes.write.format(\"csv\").option(\"header\",\"true\").mode(\"Overwrite\").save(\"s3://fassier-morgan-telecom-gdelt2020/Q3Personnes\")\ndfQ3Lieux.write.format(\"csv\").option(\"header\",\"true\").mode(\"Overwrite\").save(\"s3://fassier-morgan-telecom-gdelt2020/Q3Lieux\")",
+      "user": "anonymous",
+      "dateUpdated": "2021-01-25T14:12:55+0000",
+      "config": {
+        "editorSetting": {
+          "language": "scala",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12,
+        "editorMode": "ace/mode/scala",
+        "fontSize": 9,
+        "results": {},
+        "enabled": false,
+        "title": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "apps": [],
+      "runtimeInfos": {},
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1611569886794_-124947551",
+      "id": "paragraph_1611525906994_2013556561",
+      "dateCreated": "2021-01-25T10:18:06+0000",
+      "status": "FINISHED",
+      "$$hashKey": "object:261",
+      "dateFinished": "2021-01-25T12:24:21+0000",
+      "dateStarted": "2021-01-25T11:44:44+0000",
+      "title": "Create dataframes and put them in Morgan's S3 bucket for the three first questions"
+    },
+    {
+      "user": "anonymous",
+      "config": {
+        "colWidth": 12,
+        "fontSize": 9,
+        "enabled": true,
+        "results": {
+          "0": {
+            "graph": {
+              "mode": "multiBarChart",
+              "height": 300,
+              "optionOpen": false,
+              "setting": {
+                "lineChart": {
+                  "rotate": {
+                    "degree": "-45"
+                  },
+                  "xLabelStatus": "default"
+                },
+                "stackedAreaChart": {
+                  "rotate": {
+                    "degree": "-45"
+                  },
+                  "xLabelStatus": "default",
+                  "style": "stack"
+                },
+                "multiBarChart": {
+                  "rotate": {
+                    "degree": "-45"
+                  },
+                  "xLabelStatus": "default"
+                }
+              },
+              "commonSetting": {},
+              "keys": [
+                {
+                  "name": "MentionTimeDate",
+                  "index": 0,
+                  "aggr": "sum"
+                }
+              ],
+              "groups": [],
+              "values": [
+                {
+                  "name": "count",
+                  "index": 1,
+                  "aggr": "sum"
+                }
+              ]
+            },
+            "helium": {}
+          },
+          "1": {
+            "graph": {
+              "mode": "multiBarChart",
+              "height": 300,
+              "optionOpen": false,
+              "setting": {
+                "table": {
+                  "tableGridState": {},
+                  "tableColumnTypeState": {
+                    "names": {
+                      "Date": "string",
+                      "avg(Tone)": "string"
+                    },
+                    "updated": false
+                  },
+                  "tableOptionSpecHash": "[{\"name\":\"useFilter\",\"valueType\":\"boolean\",\"defaultValue\":false,\"widget\":\"checkbox\",\"description\":\"Enable filter for columns\"},{\"name\":\"showPagination\",\"valueType\":\"boolean\",\"defaultValue\":false,\"widget\":\"checkbox\",\"description\":\"Enable pagination for better navigation\"},{\"name\":\"showAggregationFooter\",\"valueType\":\"boolean\",\"defaultValue\":false,\"widget\":\"checkbox\",\"description\":\"Enable a footer for displaying aggregated values\"}]",
+                  "tableOptionValue": {
+                    "useFilter": false,
+                    "showPagination": false,
+                    "showAggregationFooter": false
+                  },
+                  "updated": false,
+                  "initialized": false
+                },
+                "lineChart": {
+                  "rotate": {
+                    "degree": "-45"
+                  },
+                  "xLabelStatus": "default"
+                },
+                "stackedAreaChart": {
+                  "rotate": {
+                    "degree": "-45"
+                  },
+                  "xLabelStatus": "default"
+                },
+                "multiBarChart": {
+                  "rotate": {
+                    "degree": "-45"
+                  },
+                  "xLabelStatus": "default"
+                }
+              },
+              "commonSetting": {},
+              "keys": [
+                {
+                  "name": "Date",
+                  "index": 0,
+                  "aggr": "sum"
+                }
+              ],
+              "groups": [],
+              "values": [
+                {
+                  "name": "avg(Tone)",
+                  "index": 1,
+                  "aggr": "sum"
+                }
+              ]
+            },
+            "helium": {}
+          }
+        },
+        "editorSetting": {
+          "language": "scala",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "editorMode": "ace/mode/scala",
+        "title": true,
+        "tableHide": false
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "apps": [],
+      "runtimeInfos": {
+        "jobUrl": {
+          "propertyName": "jobUrl",
+          "label": "SPARK JOB",
+          "tooltip": "View in Spark web UI",
+          "group": "spark",
+          "values": [
+            {
+              "jobUrl": "http://ip-172-31-29-227.ec2.internal:4040/jobs/job?id=124",
+              "$$hashKey": "object:15881"
+            },
+            {
+              "jobUrl": "http://ip-172-31-29-227.ec2.internal:4040/jobs/job?id=125",
+              "$$hashKey": "object:15882"
+            },
+            {
+              "jobUrl": "http://ip-172-31-29-227.ec2.internal:4040/jobs/job?id=126",
+              "$$hashKey": "object:15883"
+            },
+            {
+              "jobUrl": "http://ip-172-31-29-227.ec2.internal:4040/jobs/job?id=127",
+              "$$hashKey": "object:15884"
+            },
+            {
+              "jobUrl": "http://ip-172-31-29-227.ec2.internal:4040/jobs/job?id=128",
+              "$$hashKey": "object:15885"
+            },
+            {
+              "jobUrl": "http://ip-172-31-29-227.ec2.internal:4040/jobs/job?id=129",
+              "$$hashKey": "object:15886"
+            },
+            {
+              "jobUrl": "http://ip-172-31-29-227.ec2.internal:4040/jobs/job?id=130",
+              "$$hashKey": "object:15887"
+            },
+            {
+              "jobUrl": "http://ip-172-31-29-227.ec2.internal:4040/jobs/job?id=131",
+              "$$hashKey": "object:15888"
+            },
+            {
+              "jobUrl": "http://ip-172-31-29-227.ec2.internal:4040/jobs/job?id=132",
+              "$$hashKey": "object:15889"
+            },
+            {
+              "jobUrl": "http://ip-172-31-29-227.ec2.internal:4040/jobs/job?id=133",
+              "$$hashKey": "object:15890"
+            },
+            {
+              "jobUrl": "http://ip-172-31-29-227.ec2.internal:4040/jobs/job?id=134",
+              "$$hashKey": "object:15891"
+            },
+            {
+              "jobUrl": "http://ip-172-31-29-227.ec2.internal:4040/jobs/job?id=135",
+              "$$hashKey": "object:15892"
+            },
+            {
+              "jobUrl": "http://ip-172-31-29-227.ec2.internal:4040/jobs/job?id=136",
+              "$$hashKey": "object:15893"
+            }
+          ],
+          "interpreterSettingId": "spark"
+        }
+      },
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1611580789276_-1507201402",
+      "id": "paragraph_1611580789276_-1507201402",
+      "dateCreated": "2021-01-25T13:19:49+0000",
+      "status": "FINISHED",
+      "focus": true,
+      "$$hashKey": "object:1142",
+      "text": "// numbre of mentions / day for the COVID-19\n// We can see clearly the two COVID-19's waves (march 2020 and november 2020)\nval Q1 = spark.read.format(\"csv\")\n                   .option(\"header\", \"true\")\n                   .option(\"inferSchema\", \"true\")\n                   .load(\"s3://fassier-morgan-telecom-gdelt2020/Q1/*\")\nz.show(Q1.select(\"MentionTimeDate\", \"MentionIdentifier\").groupBy(\"MentionTimeDate\").count().orderBy(\"MentionTimeDate\"))\n\n\n// average tone / day for the COVID-19\n// We see that the average tone / day of articles with at least one mention of the covid theme become less and less negative in the beginning and stabilise at -2 afterwards\nval Q3Personnes = spark.read.format(\"csv\")\n                    .option(\"header\", \"true\")\n                    .option(\"inferSchema\", \"true\")\n                    .load(\"s3://fassier-morgan-telecom-gdelt2020/Q3Personnes/*\")\nz.show(Q3Personnes.groupBy(\"GkgRecordID\", \"Date\").agg(mean(\"Tone\").as(\"Tone\")).groupBy(\"Date\").agg(mean(\"Tone\")).orderBy(\"Date\"))",
+      "dateUpdated": "2021-01-25T14:18:43+0000",
+      "dateFinished": "2021-01-25T14:09:07+0000",
+      "dateStarted": "2021-01-25T14:07:54+0000",
+      "title": "Ideas for the 4th question",
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TABLE",
+            "data": "MentionTimeDate\tcount\n2020-01-01\t7\n2020-01-02\t159\n2020-01-03\t36\n2020-01-04\t84\n2020-01-05\t33\n2020-01-06\t168\n2020-01-07\t108\n2020-01-08\t93\n2020-01-09\t1747\n2020-01-10\t366\n2020-01-11\t651\n2020-01-12\t372\n2020-01-13\t805\n2020-01-14\t1029\n2020-01-15\t1476\n2020-01-16\t3436\n2020-01-17\t6566\n2020-01-18\t5271\n2020-01-19\t2179\n2020-01-20\t10637\n2020-01-21\t30957\n2020-01-22\t45941\n2020-01-23\t49983\n2020-01-24\t57435\n2020-01-25\t43928\n2020-01-26\t67417\n2020-01-27\t74923\n2020-01-28\t106585\n2020-01-29\t134256\n2020-01-30\t139198\n2020-01-31\t144079\n2020-02-01\t126438\n2020-02-02\t112386\n2020-02-03\t127366\n2020-02-04\t131105\n2020-02-05\t97934\n2020-02-06\t83421\n2020-02-07\t98572\n2020-02-08\t72254\n2020-02-09\t60390\n2020-02-10\t64020\n2020-02-11\t76679\n2020-02-12\t65393\n2020-02-13\t77149\n2020-02-14\t58606\n2020-02-15\t52569\n2020-02-16\t58713\n2020-02-17\t68581\n2020-02-18\t67653\n2020-02-19\t48395\n2020-02-20\t59360\n2020-02-21\t72091\n2020-02-22\t47757\n2020-02-23\t47736\n2020-02-24\t69171\n2020-02-25\t96317\n2020-02-26\t142173\n2020-02-27\t150373\n2020-02-28\t145938\n2020-02-29\t144214\n2020-03-01\t139845\n2020-03-02\t175444\n2020-03-03\t167214\n2020-03-04\t177189\n2020-03-05\t206829\n2020-03-06\t197538\n2020-03-07\t139861\n2020-03-08\t151024\n2020-03-09\t202311\n2020-03-10\t250096\n2020-03-11\t262339\n2020-03-12\t307699\n2020-03-13\t292298\n2020-03-14\t214327\n2020-03-15\t246637\n2020-03-16\t290211\n2020-03-17\t372004\n2020-03-18\t427938\n2020-03-19\t438855\n2020-03-20\t404083\n2020-03-21\t251359\n2020-03-22\t281815\n2020-03-23\t379911\n2020-03-24\t374839\n2020-03-25\t396823\n2020-03-26\t392238\n2020-03-27\t369083\n2020-03-28\t275429\n2020-03-29\t259657\n2020-03-30\t309782\n2020-03-31\t354649\n2020-04-01\t351525\n2020-04-02\t377182\n2020-04-03\t358610\n2020-04-04\t270994\n2020-04-05\t230289\n2020-04-06\t327697\n2020-04-07\t357394\n2020-04-08\t343019\n2020-04-09\t323746\n2020-04-10\t305470\n2020-04-11\t227811\n2020-04-12\t192531\n2020-04-13\t272496\n2020-04-14\t315888\n2020-04-15\t322481\n2020-04-16\t306130\n2020-04-17\t299056\n2020-04-18\t243139\n2020-04-19\t185238\n2020-04-20\t287152\n2020-04-21\t292537\n2020-04-22\t318665\n2020-04-23\t293134\n2020-04-24\t288327\n2020-04-25\t186903\n2020-04-26\t171464\n2020-04-27\t234339\n2020-04-28\t266518\n2020-04-29\t280629\n2020-04-30\t275213\n2020-05-01\t252165\n2020-05-02\t158670\n2020-05-03\t160229\n2020-05-04\t236000\n2020-05-05\t267632\n2020-05-06\t259204\n2020-05-07\t263857\n2020-05-08\t254921\n2020-05-09\t171647\n2020-05-10\t160709\n2020-05-11\t218463\n2020-05-12\t238486\n2020-05-13\t274540\n2020-05-14\t251913\n2020-05-15\t215195\n2020-05-16\t151787\n2020-05-17\t132928\n2020-05-18\t201679\n2020-05-19\t253078\n2020-05-20\t244777\n2020-05-21\t246683\n2020-05-22\t221869\n2020-05-23\t154073\n2020-05-24\t139425\n2020-05-25\t153466\n2020-05-26\t206365\n2020-05-27\t210030\n2020-05-28\t197556\n2020-05-29\t205644\n2020-05-30\t140921\n2020-05-31\t143568\n2020-06-01\t202797\n2020-06-02\t199465\n2020-06-03\t220975\n2020-06-04\t222600\n2020-06-05\t213869\n2020-06-06\t134040\n2020-06-07\t135154\n2020-06-08\t173650\n2020-06-09\t171557\n2020-06-10\t155210\n2020-06-11\t165358\n2020-06-12\t160497\n2020-06-13\t123870\n2020-06-14\t106782\n2020-06-15\t145707\n2020-06-16\t164920\n2020-06-17\t192405\n2020-06-18\t201473\n2020-06-19\t161381\n2020-06-20\t119483\n2020-06-21\t127774\n2020-06-22\t152543\n2020-06-23\t178399\n2020-06-24\t181332\n2020-06-25\t165305\n2020-06-26\t166696\n2020-06-27\t142229\n2020-06-28\t117310\n2020-06-29\t135843\n2020-06-30\t180161\n2020-07-01\t173348\n2020-07-02\t171074\n2020-07-03\t148745\n2020-07-04\t123009\n2020-07-05\t111376\n2020-07-06\t151524\n2020-07-07\t176137\n2020-07-08\t212529\n2020-07-09\t179350\n2020-07-10\t151072\n2020-07-11\t127630\n2020-07-12\t107714\n2020-07-13\t159535\n2020-07-14\t176458\n2020-07-15\t177219\n2020-07-16\t170203\n2020-07-17\t144117\n2020-07-18\t101584\n2020-07-19\t104298\n2020-07-20\t145647\n2020-07-21\t159095\n2020-07-22\t173976\n2020-07-23\t183524\n2020-07-24\t167257\n2020-07-25\t111006\n2020-07-26\t97043\n2020-07-27\t150203\n2020-07-28\t172652\n2020-07-29\t169549\n2020-07-30\t157439\n2020-07-31\t140638\n2020-08-01\t101617\n2020-08-02\t88581\n2020-08-03\t112877\n2020-08-04\t143324\n2020-08-05\t193265\n2020-08-06\t171600\n2020-08-07\t151631\n2020-08-08\t121203\n2020-08-09\t98206\n2020-08-10\t127232\n2020-08-11\t172483\n2020-08-12\t152129\n2020-08-13\t166221\n2020-08-14\t148848\n2020-08-15\t83708\n2020-08-16\t81049\n2020-08-17\t139104\n2020-08-18\t159505\n2020-08-19\t152743\n2020-08-20\t149355\n2020-08-21\t146102\n2020-08-22\t79425\n2020-08-23\t78117\n2020-08-24\t140136\n2020-08-25\t151589\n2020-08-26\t133738\n2020-08-27\t137739\n2020-08-28\t140325\n2020-08-29\t79674\n2020-08-30\t65522\n2020-08-31\t120035\n2020-09-01\t129646\n2020-09-02\t135963\n2020-09-03\t133255\n2020-09-04\t115891\n2020-09-05\t79302\n2020-09-06\t70677\n2020-09-07\t107701\n2020-09-08\t116837\n2020-09-09\t127543\n2020-09-10\t123080\n2020-09-11\t134073\n2020-09-12\t81221\n2020-09-13\t65347\n2020-09-14\t110430\n2020-09-15\t142214\n2020-09-16\t142715\n2020-09-17\t115322\n2020-09-18\t118160\n2020-09-19\t71355\n2020-09-20\t57139\n2020-09-21\t103678\n2020-09-22\t140055\n2020-09-23\t136832\n2020-09-24\t127481\n2020-09-25\t106703\n2020-09-26\t57942\n2020-09-27\t58093\n2020-09-28\t73031\n2020-09-29\t100496\n2020-09-30\t94192\n2020-10-01\t113762\n2020-10-02\t193983\n2020-10-03\t82518\n2020-10-04\t62437\n2020-10-05\t110693\n2020-10-06\t123378\n2020-10-07\t111433\n2020-10-08\t119794\n2020-10-09\t71971\n2020-10-10\t76289\n2020-10-11\t58585\n2020-10-12\t69164\n2020-10-13\t79895\n2020-10-14\t90020\n2020-10-15\t86868\n2020-10-16\t31789\n2020-10-17\t52473\n2020-10-18\t63703\n2020-10-19\t75440\n2020-10-20\t72898\n2020-10-21\t74551\n2020-10-22\t57783\n2020-10-23\t48239\n2020-10-24\t43156\n2020-10-25\t57944\n2020-10-26\t65359\n2020-10-27\t61443\n2020-10-28\t73217\n2020-10-29\t53100\n2020-10-30\t27956\n2020-10-31\t18131\n2020-11-01\t38382\n2020-11-02\t72304\n2020-11-03\t60664\n2020-11-04\t104594\n2020-11-05\t41990\n2020-11-06\t20047\n2020-11-07\t15805\n2020-11-08\t29146\n2020-11-09\t59539\n2020-11-10\t48701\n2020-11-11\t43138\n2020-11-12\t36672\n2020-11-13\t9152\n2020-11-14\t7545\n2020-11-15\t14064\n2020-11-16\t41351\n2020-11-17\t36529\n2020-11-18\t121154\n2020-11-19\t120852\n2020-11-20\t123469\n2020-11-21\t76959\n2020-11-22\t71495\n2020-11-23\t94087\n2020-11-24\t109504\n2020-11-25\t102682\n2020-11-26\t88356\n2020-11-27\t77640\n2020-11-28\t72294\n2020-11-29\t55595\n2020-11-30\t102646\n2020-12-01\t103248\n2020-12-02\t115909\n2020-12-03\t118074\n2020-12-04\t104078\n2020-12-05\t66225\n2020-12-06\t71256\n2020-12-07\t114602\n2020-12-08\t121472\n2020-12-09\t102152\n2020-12-10\t118795\n2020-12-11\t93101\n2020-12-12\t78898\n2020-12-13\t60015\n2020-12-14\t115720\n2020-12-15\t136827\n2020-12-16\t115766\n2020-12-17\t111697\n2020-12-18\t109446\n2020-12-19\t94877\n2020-12-20\t111017\n2020-12-21\t200624\n2020-12-22\t145532\n2020-12-23\t126123\n2020-12-24\t130761\n2020-12-25\t63794\n2020-12-26\t71523\n2020-12-27\t75185\n2020-12-28\t91213\n2020-12-29\t103251\n2020-12-30\t122663\n2020-12-31\t108317\n"
+          },
+          {
+            "type": "TABLE",
+            "data": "Date\tavg(Tone)\n2020-01-01\t-6.01755145\n2020-01-02\t-5.3781907794\n2020-01-03\t-5.882427756279069\n2020-01-04\t-5.213566192857143\n2020-01-05\t-5.526246955555555\n2020-01-06\t-5.336463791025641\n2020-01-07\t-5.345593641904763\n2020-01-08\t-5.6016219722222225\n2020-01-09\t-5.365421973095794\n2020-01-10\t-5.214032820833332\n2020-01-11\t-4.782582352920562\n2020-01-12\t-4.705606596703299\n2020-01-13\t-4.378018570633484\n2020-01-14\t-4.363807246221765\n2020-01-15\t-4.224509284150196\n2020-01-16\t-4.7031368505898135\n2020-01-17\t-4.708179865262177\n2020-01-18\t-4.319234479400387\n2020-01-19\t-4.650255437432124\n2020-01-20\t-4.197452256369554\n2020-01-21\t-4.285056185417125\n2020-01-22\t-3.6553500784587456\n2020-01-23\t-3.637651283778367\n2020-01-24\t-3.697948568508036\n2020-01-25\t-3.571556765088881\n2020-01-26\t-3.536248520421673\n2020-01-27\t-3.2780555814961443\n2020-01-28\t-3.206595885101189\n2020-01-29\t-3.0097773715618943\n2020-01-30\t-3.1477195228158372\n2020-01-31\t-3.11232342923947\n2020-02-01\t-2.931390754391297\n2020-02-02\t-2.9968331158058703\n2020-02-03\t-3.0278082904657198\n2020-02-04\t-3.033404708615405\n2020-02-05\t-2.764958154355587\n2020-02-06\t-2.814094372874377\n2020-02-07\t-2.8946007572933956\n2020-02-08\t-3.3038212515105654\n2020-02-09\t-3.027967360807013\n2020-02-10\t-2.7890258440559497\n2020-02-11\t-2.864326186004163\n2020-02-12\t-2.7233946128236686\n2020-02-13\t-2.863617463033109\n2020-02-14\t-2.7025059468093233\n2020-02-15\t-3.0569445679738507\n2020-02-16\t-2.9572743713000285\n2020-02-17\t-2.9423452352768362\n2020-02-18\t-2.9135447951478657\n2020-02-19\t-2.9242377214820654\n2020-02-20\t-2.9272257611793155\n2020-02-21\t-3.081728181335118\n2020-02-22\t-3.18135512318429\n2020-02-23\t-3.226841641274951\n2020-02-24\t-3.2606711485665385\n2020-02-25\t-3.1388779082557865\n2020-02-26\t-3.0015956644051798\n2020-02-27\t-2.971941250844348\n2020-02-28\t-3.0340927464365706\n2020-02-29\t-3.066672077388068\n2020-03-01\t-2.9615434001946443\n2020-03-02\t-2.768048693040945\n2020-03-03\t-2.449690468252573\n2020-03-04\t-2.4032753221713428\n2020-03-05\t-2.4875467751090263\n2020-03-06\t-2.49853664417018\n2020-03-07\t-2.51151888116991\n2020-03-08\t-2.6849843607603825\n2020-03-09\t-2.8045359273748582\n2020-03-10\t-2.506189419226442\n2020-03-11\t-2.3682622355975047\n2020-03-12\t-2.321040946275036\n2020-03-13\t-2.1144235384137855\n2020-03-14\t-2.1192353389221212\n2020-03-15\t-2.129265454066634\n2020-03-16\t-2.0460026950525063\n2020-03-17\t-1.8831439821469305\n2020-03-18\t-1.9284604295542356\n2020-03-19\t-1.9868946926765758\n2020-03-20\t-1.9530590815576105\n2020-03-21\t-2.0058827791676226\n2020-03-22\t-2.273332891392346\n2020-03-23\t-2.0575442450137515\n2020-03-24\t-2.045316731126499\n2020-03-25\t-1.9224369595791373\n2020-03-26\t-1.9874230895480742\n2020-03-27\t-2.0451128234681537\n2020-03-28\t-2.076184431916254\n2020-03-29\t-2.3666867090954256\n2020-03-30\t-1.9543740153397355\n2020-03-31\t-2.012166894734085\n2020-04-01\t-2.0858899881650204\n2020-04-02\t-2.0985646572146988\n2020-04-03\t-1.9517905064844474\n2020-04-04\t-2.1183366001181745\n2020-04-05\t-2.2454059807169053\n2020-04-06\t-2.0752570520263536\n2020-04-07\t-1.994223833354048\n2020-04-08\t-1.9821960067960362\n2020-04-09\t-2.027389101448859\n2020-04-10\t-2.0809214579212454\n2020-04-11\t-2.170352710651132\n2020-04-12\t-2.1128023403734466\n2020-04-13\t-2.0939893291532843\n2020-04-14\t-2.028288169823358\n2020-04-15\t-2.0379900905893527\n2020-04-16\t-1.9869786920618\n2020-04-17\t-1.951106808416748\n2020-04-18\t-2.0703744713583005\n2020-04-19\t-1.9621502994911189\n2020-04-20\t-2.0960537316042194\n2020-04-21\t-2.036695456697594\n2020-04-22\t-1.9887753446190173\n2020-04-23\t-1.956871798451658\n2020-04-24\t-1.9219201030023236\n2020-04-25\t-2.0572351421087816\n2020-04-26\t-2.1797394954068663\n2020-04-27\t-1.9163737756738628\n2020-04-28\t-1.9249158922495528\n2020-04-29\t-1.8897942960670462\n2020-04-30\t-1.896713410352925\n2020-05-01\t-1.8689245761298907\n2020-05-02\t-2.0089546055040914\n2020-05-03\t-2.112783426325078\n2020-05-04\t-1.8962595755339002\n2020-05-05\t-1.9047075197276262\n2020-05-06\t-1.9664137285168246\n2020-05-07\t-1.9986066151031283\n2020-05-08\t-1.8384504611574277\n2020-05-09\t-2.0224339390228923\n2020-05-10\t-2.338259195865893\n2020-05-11\t-2.0240946993238653\n2020-05-12\t-1.9604574413372489\n2020-05-13\t-2.053088408449158\n2020-05-14\t-2.1178505124196794\n2020-05-15\t-2.003970633570617\n2020-05-16\t-2.0379214301871222\n2020-05-17\t-2.1749470653129275\n2020-05-18\t-1.839722108479908\n2020-05-19\t-1.716585326828275\n2020-05-20\t-1.7877752360188197\n2020-05-21\t-1.9112715776719538\n2020-05-22\t-1.8817089684923938\n2020-05-23\t-2.071939155897394\n2020-05-24\t-2.0939275677805886\n2020-05-25\t-2.0800236896568967\n2020-05-26\t-1.8468481092251672\n2020-05-27\t-1.849915545355983\n2020-05-28\t-1.8019091061653827\n2020-05-29\t-1.940432989126016\n2020-05-30\t-2.1612672524768617\n2020-05-31\t-2.403842650336956\n2020-06-01\t-2.2656857604796694\n2020-06-02\t-2.334458134484146\n2020-06-03\t-2.2040210184693487\n2020-06-04\t-2.204139659603145\n2020-06-05\t-2.0612236732216593\n2020-06-06\t-2.1195509277127442\n2020-06-07\t-2.7276549832401518\n2020-06-08\t-2.2303740821680065\n2020-06-09\t-2.102524999232933\n2020-06-10\t-1.955072739953261\n2020-06-11\t-1.9005140435775767\n2020-06-12\t-1.9653916347533076\n2020-06-13\t-2.0918256760646496\n2020-06-14\t-2.2110123581463124\n2020-06-15\t-1.855251479745987\n2020-06-16\t-1.8078555083736976\n2020-06-17\t-1.7702536783826084\n2020-06-18\t-1.857273912578986\n2020-06-19\t-1.8040810082927985\n2020-06-20\t-2.0282688545541507\n2020-06-21\t-2.282096550882805\n2020-06-22\t-1.7885012070537292\n2020-06-23\t-1.8126195637936287\n2020-06-24\t-1.967100642358564\n2020-06-25\t-1.791033561338184\n2020-06-26\t-1.9384438238178532\n2020-06-27\t-2.070954025734401\n2020-06-28\t-2.126602968907076\n2020-06-29\t-1.6730360798558148\n2020-06-30\t-1.8586129911727498\n2020-07-01\t-1.8103730013011925\n2020-07-02\t-1.8103597244422023\n2020-07-03\t-1.8569709242105854\n2020-07-04\t-1.9407718171910706\n2020-07-05\t-2.041703754897077\n2020-07-06\t-1.8728544471851074\n2020-07-07\t-2.0992021326992387\n2020-07-08\t-2.010350849308752\n2020-07-09\t-2.0602824050143163\n2020-07-10\t-2.0159524983379704\n2020-07-11\t-2.3249573167295265\n2020-07-12\t-2.070576418982169\n2020-07-13\t-2.145464124251842\n2020-07-14\t-2.2214886551922697\n2020-07-15\t-1.9219359539746113\n2020-07-16\t-2.0362755918440034\n2020-07-17\t-1.9189494514841188\n2020-07-18\t-2.3062461626037694\n2020-07-19\t-2.515987184268193\n2020-07-20\t-1.7992527099400268\n2020-07-21\t-1.7607783426055068\n2020-07-22\t-2.0208405070531854\n2020-07-23\t-2.0022108583285902\n2020-07-24\t-2.0351649353482584\n2020-07-25\t-2.270736369109209\n2020-07-26\t-2.568140304063755\n2020-07-27\t-2.0841333922107594\n2020-07-28\t-1.9081362598520615\n2020-07-29\t-1.915288330386443\n2020-07-30\t-2.0868246711337224\n2020-07-31\t-2.123968468501853\n2020-08-01\t-2.4424136645261854\n2020-08-02\t-2.478995770701861\n2020-08-03\t-2.009824749978584\n2020-08-04\t-2.122545514884461\n2020-08-05\t-2.034524030697958\n2020-08-06\t-2.292746543729893\n2020-08-07\t-2.2021917106317774\n2020-08-08\t-2.497764966654098\n2020-08-09\t-2.5811357781374342\n2020-08-10\t-2.0051891434743863\n2020-08-11\t-1.959314094164823\n2020-08-12\t-1.7779118821565225\n2020-08-13\t-1.8971220072498567\n2020-08-14\t-1.871563001416232\n2020-08-15\t-1.8844238679665088\n2020-08-16\t-2.2720430531535443\n2020-08-17\t-2.040326957218499\n2020-08-18\t-1.9383522623062515\n2020-08-19\t-1.85338832673633\n2020-08-20\t-1.98388610713602\n2020-08-21\t-2.0560198425081553\n2020-08-22\t-2.1995128805778403\n2020-08-23\t-2.393998009852604\n2020-08-24\t-1.768144628015557\n2020-08-25\t-1.9046801230688413\n2020-08-26\t-2.0507769054106704\n2020-08-27\t-2.0779077561041936\n2020-08-28\t-2.0704769920418693\n2020-08-29\t-2.2623088314023536\n2020-08-30\t-2.224945058804972\n2020-08-31\t-1.9439725629108315\n2020-09-01\t-1.9068128978066219\n2020-09-02\t-1.9472211495874108\n2020-09-03\t-2.0275107218399473\n2020-09-04\t-1.904119244801579\n2020-09-05\t-2.117826630645217\n2020-09-06\t-2.623453797110331\n2020-09-07\t-2.17915726179633\n2020-09-08\t-1.9223831979431523\n2020-09-09\t-2.064124335953602\n2020-09-10\t-2.075836871620977\n2020-09-11\t-2.1405618625434704\n2020-09-12\t-2.242277663053366\n2020-09-13\t-2.4393617159786123\n2020-09-14\t-1.952043078772064\n2020-09-15\t-1.8799314603701789\n2020-09-16\t-1.9086859727176926\n2020-09-17\t-1.900479136083879\n2020-09-18\t-2.0147661146988822\n2020-09-19\t-2.4018260805008746\n2020-09-20\t-2.258470233891639\n2020-09-21\t-1.9098892665380391\n2020-09-22\t-2.15020939633694\n2020-09-23\t-1.8795023364392534\n2020-09-24\t-1.8096536077570795\n2020-09-25\t-2.0127240579863472\n2020-09-26\t-2.345929264563092\n2020-09-27\t-2.1070359850932703\n2020-09-28\t-1.9301998769076538\n2020-09-29\t-2.050298380876623\n2020-09-30\t-2.1701936016949994\n2020-10-01\t-2.008593593983553\n2020-10-02\t-2.2476172523606475\n2020-10-03\t-2.043634064537565\n2020-10-04\t-2.1323806803960648\n2020-10-05\t-1.779305124946997\n2020-10-06\t-2.079217252602445\n2020-10-07\t-2.057533447543766\n2020-10-08\t-2.1176652238161173\n2020-10-09\t-2.0361810281322033\n2020-10-10\t-2.0839311447304127\n2020-10-11\t-2.3048504722255116\n2020-10-12\t-1.8986967336437037\n2020-10-13\t-2.2961589436645977\n2020-10-14\t-2.018728104300128\n2020-10-15\t-2.1794030753734686\n2020-10-16\t-2.3114865415382537\n2020-10-17\t-2.293003868073583\n2020-10-18\t-2.441756748714511\n2020-10-19\t-2.12063772493304\n2020-10-20\t-1.9459457820451054\n2020-10-21\t-1.9775031762640167\n2020-10-22\t-2.0984448361869164\n2020-10-23\t-2.2629927928705458\n2020-10-24\t-2.41642317261186\n2020-10-25\t-2.585956107409432\n2020-10-26\t-2.0470906943746066\n2020-10-27\t-2.1872373558727483\n2020-10-28\t-2.3420950633813633\n2020-10-29\t-2.501245770532866\n2020-10-30\t-2.466566690351653\n2020-10-31\t-2.548506339144786\n2020-11-01\t-2.8908151732042153\n2020-11-02\t-2.2646989338225647\n2020-11-03\t-2.457369669447482\n2020-11-04\t-1.8788434674414973\n2020-11-05\t-2.2335255027402847\n2020-11-06\t-2.392013184288667\n2020-11-07\t-1.9856379084298534\n2020-11-08\t-1.7641484091690236\n2020-11-09\t-1.7742426623788499\n2020-11-10\t-1.837495585120816\n2020-11-11\t-1.9353029778694806\n2020-11-12\t-2.1108680726253586\n2020-11-13\t-2.277595844952122\n2020-11-14\t-1.9385895384184058\n2020-11-15\t-2.3551215600974813\n2020-11-16\t-1.9692862185807427\n2020-11-17\t-1.8885783417212778\n2020-11-18\t-1.8424418962652613\n2020-11-19\t-1.9875828334453747\n2020-11-20\t-1.9286417461713155\n2020-11-21\t-1.9865057609759613\n2020-11-22\t-2.0732698076374114\n2020-11-23\t-1.4912546498211505\n2020-11-24\t-1.4339839103235383\n2020-11-25\t-1.7865900992235013\n2020-11-26\t-1.8381565360202312\n2020-11-27\t-1.8765189942375529\n2020-11-28\t-2.165648975656855\n2020-11-29\t-2.1994409910421897\n2020-11-30\t-1.8380382766360852\n2020-12-01\t-1.817425399864702\n2020-12-02\t-1.5026418971725548\n2020-12-03\t-1.6600078635218825\n2020-12-04\t-1.5510063990575058\n2020-12-05\t-1.7644957404999362\n2020-12-06\t-1.7302619514023687\n2020-12-07\t-1.6502720115882652\n2020-12-08\t-1.3261791179588927\n2020-12-09\t-1.5886663403085708\n2020-12-10\t-1.6850437120264812\n2020-12-11\t-1.6636724676826178\n2020-12-12\t-1.6324131263679649\n2020-12-13\t-1.872929859318866\n2020-12-14\t-1.6434518018325333\n2020-12-15\t-1.5185126453023947\n2020-12-16\t-1.646799805929087\n2020-12-17\t-1.634919481808254\n2020-12-18\t-1.5120037885213864\n2020-12-19\t-1.7516702272435583\n2020-12-20\t-2.300410898636058\n2020-12-21\t-2.0481016063893125\n2020-12-22\t-1.9783201565767623\n2020-12-23\t-1.9073489803594297\n2020-12-24\t-1.6759399816583234\n2020-12-25\t-1.769509309819171\n2020-12-26\t-2.1283215214929174\n2020-12-27\t-2.0012054629272256\n2020-12-28\t-1.964359126021733\n2020-12-29\t-1.9096712877474236\n2020-12-30\t-1.6020796827348793\n2020-12-31\t-1.6229061082813891\n"
+          },
+          {
+            "type": "TEXT",
+            "data": "\u001b[1m\u001b[34mQ1\u001b[0m: \u001b[1m\u001b[32morg.apache.spark.sql.DataFrame\u001b[0m = [GlobalEventID: int, MentionTimeDate: string ... 3 more fields]\n\u001b[1m\u001b[34mQ3Personnes\u001b[0m: \u001b[1m\u001b[32morg.apache.spark.sql.DataFrame\u001b[0m = [GkgRecordID: string, Date: string ... 3 more fields]\n"
+          }
+        ]
+      }
+    }
+  ],
+  "name": "processedDataToS3",
+  "id": "2FXSMR8PA",
+  "defaultInterpreterGroup": "spark",
+  "version": "0.9.0-preview1",
+  "noteParams": {},
+  "noteForms": {},
+  "angularObjects": {},
+  "config": {
+    "isZeppelinNotebookCronEnable": false,
+    "looknfeel": "default",
+    "personalizedMode": "false"
+  },
+  "info": {},
+  "path": "/processedDataToS3"
+}

@@ -1,0 +1,197 @@
+﻿{
+  "paragraphs": [
+    {
+      "text": "%md\n####**We download all the zip files (event, mentions and gkg) at intervals of 15 minutes which are given to us by the \"masterfile.txt\" and the \"masterfile-translation.txt\".**\n####**Then, we put them in Ernest's S3 bucket (s3://majdalani-ernest-telecom-gdelt2020/translation).**",
+      "user": "anonymous",
+      "dateUpdated": "2021-01-25T10:42:19+0000",
+      "config": {
+        "editorSetting": {
+          "language": "text",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12,
+        "editorMode": "ace/mode/text",
+        "fontSize": 9,
+        "results": {},
+        "enabled": false,
+        "tableHide": false,
+        "editorHide": true,
+        "title": false
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "HTML",
+            "data": "<h4><strong>We download all the zip files (event, mentions and gkg) at intervals of 15 minutes which are given to us by the &ldquo;masterfile.txt&rdquo; and the &ldquo;masterfile-translation.txt&rdquo;.</strong></h4>\n<h4><strong>Then, we put them in Ernest's S3 bucket (s3://majdalani-ernest-telecom-gdelt2020/translation).</strong></h4>\n"
+          }
+        ]
+      },
+      "apps": [],
+      "runtimeInfos": {},
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1611569882884_-1523070924",
+      "id": "paragraph_1611521575580_-635451608",
+      "dateCreated": "2021-01-25T10:18:02+0000",
+      "status": "FINISHED",
+      "focus": true,
+      "$$hashKey": "object:57",
+      "dateFinished": "2021-01-25T10:31:43+0000",
+      "dateStarted": "2021-01-25T10:31:43+0000",
+      "title": ""
+    },
+    {
+      "text": "import sys.process._\nimport java.net.URL\nimport java.io.File\nimport java.net.HttpURLConnection\nimport org.apache.spark.sql.SQLContext\nimport com.amazonaws.services.s3.AmazonS3Client\nimport com.amazonaws.auth.BasicSessionCredentials\n\n\ndef fileDownloader(urlOfFileToDownload: String, fileName: String): Unit = {\n    /*\n    Download file from URL\n    */\n    \n    val url = new URL(urlOfFileToDownload)\n    val connection = url.openConnection().asInstanceOf[HttpURLConnection]\n    connection.setConnectTimeout(5000)\n    connection.setReadTimeout(5000)\n    connection.connect()\n\n    if (connection.getResponseCode >= 400)\n        println(\"error\")\n    else\n        url #> new File(fileName) !!\n}\n\n\ndef putObject(AWS_ID: String, AWS_KEY: String, AWS_TOKEN: String, location: String, dir: String, file: String): Unit = {\n    /*\n    Put file to S3 bucket\n    */\n    \n    // we add the @transient annotation to tell Spark not to try to serialize this class and send it to the executors\n    @transient val awsClient = new AmazonS3Client(new BasicSessionCredentials(AWS_ID, AWS_KEY, AWS_TOKEN))\n    \n    sc.hadoopConfiguration.set(\"fs.s3a.access.key\", AWS_ID)\n    sc.hadoopConfiguration.set(\"fs.s3a.secret.key\", AWS_KEY)\n    sc.hadoopConfiguration.set(\"fs.s3a.session.token\", AWS_TOKEN)\n    \n    awsClient.putObject(location, file, new File(dir + file))\n}\n\n\ndef download(dir: String, fileNameMaster: String, downloadDelimiter: String, location: String, AWS_ID: String, AWS_KEY: String, AWS_TOKEN: String, translation: Int): Unit = {\n    /*\n    Download zip files from URLs given in the fileNameMaster and put them in the S3 bucket\n    translation = 0 -> masterfile.txt\n    translation = 1 -> masterfile-translation.txt\n    */\n    \n    // read fileNameMaster and select zip URLs needed\n    val sqlContext = new SQLContext(sc)\n    val filesDF = sqlContext.read\n                    .option(\"delimiter\",\" \")\n                    .option(\"infer_schema\",\"true\")\n                    .csv(\"s3://\" + location + \"/\" + fileNameMaster)\n                    .withColumnRenamed(\"_c0\",\"size\")\n                    .withColumnRenamed(\"_c1\",\"hash\")\n                    .withColumnRenamed(\"_c2\",\"url\")\n                    .cache\n\n    var sampleDF = filesDF\n    if (translation == 1) {\n        sampleDF = filesDF.filter(col(\"url\").contains(downloadDelimiter))\n    }else {\n        sampleDF = filesDF.filter(col(\"url\").contains(downloadDelimiter)).filter(not($\"url\".contains(\"/20201214121500\"))) // missing document\n    }\n\n    // download zip files and put them in the S3 bucket\n    object AwsClient{\n        val s3 = new AmazonS3Client(new BasicSessionCredentials(AWS_ID, AWS_KEY, AWS_TOKEN))\n    }\n\n    sampleDF.select(\"url\").repartition(100).collect.foreach( r=> {\n            val URL = r.getAs[String](0)\n            val fileName = r.getAs[String](0).split(\"/\").last\n            val localFileName = dir + fileName\n            fileDownloader(URL,  localFileName)\n            val localFile = new File(localFileName)\n            AwsClient.s3.putObject(location, fileName, localFile)\n            localFile.delete()\n    })\n}",
+      "user": "anonymous",
+      "dateUpdated": "2021-01-25T10:39:14+0000",
+      "config": {
+        "editorSetting": {
+          "language": "scala",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12,
+        "editorMode": "ace/mode/scala",
+        "fontSize": 9,
+        "results": {},
+        "enabled": true,
+        "title": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "apps": [],
+      "runtimeInfos": {},
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1611569882886_995822602",
+      "id": "paragraph_1611521676175_-772376382",
+      "dateCreated": "2021-01-25T10:18:02+0000",
+      "status": "FINISHED",
+      "$$hashKey": "object:58",
+      "dateFinished": "2021-01-25T10:19:21+0000",
+      "dateStarted": "2021-01-25T10:18:55+0000",
+      "title": "Import and function definition"
+    },
+    {
+      "text": "// to find in the vocareum\nval AWS_ID = \"ASIA2247X6SAF4K2WKAA\"\nval AWS_KEY = \"DtJOPunAduiYlVqUBSbHsMNnoUrYwE5ADSeOJlKL\"\nval AWS_TOKEN = \"FwoGZXIvYXdzEDwaDMtqewMxqNSSXV0KACLPAWRpXw3cI8MycjkibPiJaPVN0lJDJK/brBR2LRRUWZJxVq2kstjgqO+wQxOO1YlRo9PG5w7lPLD7+zNu4IOg+crqQfIGow/0Azp20wvs2hWdU38oIIwMv2rc26DpHizT7XKvl/oJAX4zUcySFrYt8IeB6V/hrqqUiYz/9fWxd01xuXXhHLRz7eE3aZqOnFsXK5SSPdvcB2tE+qAJe3USOW5BUn6c7kZ2ENBxJE93o8unFYH3ayckTHJsuamebGNOqMFxGNnooiv7V5VlkmRbriiQtbqABjItCNwz3wRVzHi/xbcZ4yU3gjGVjTb7O+0KIWpUZr7Ve/41hyv2riWRfpEsqfht\"",
+      "user": "anonymous",
+      "dateUpdated": "2021-01-25T10:26:09+0000",
+      "config": {
+        "editorSetting": {
+          "language": "scala",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12,
+        "editorMode": "ace/mode/scala",
+        "fontSize": 9,
+        "results": {},
+        "enabled": true,
+        "title": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "apps": [],
+      "runtimeInfos": {},
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1611569882886_-1675336543",
+      "id": "paragraph_1611524533633_875891953",
+      "dateCreated": "2021-01-25T10:18:02+0000",
+      "status": "FINISHED",
+      "$$hashKey": "object:59",
+      "dateFinished": "2021-01-25T10:19:21+0000",
+      "dateStarted": "2021-01-25T10:18:58+0000",
+      "title": "Credentials initialization"
+    },
+    {
+      "text": "// Be carefull it runs for a while (enable run if willing to put all the files from masterfile-translation.txt to a S3 bucket)\nval dir = \"/mnt/tmp/\"\nval fileNameMaster = \"masterfilelist-translation.txt\"\nval downloadDelimiter = \"/2020\" // to modify if needed\nval location = \"s3://majdalani-ernest-telecom-gdelt2020/translation\" // to modify if needed\nfileDownloader(\"http://data.gdeltproject.org/gdeltv2/\" + fileNameMaster, dir + fileNameMaster)\nputObject(AWS_ID, AWS_KEY, AWS_TOKEN, location, dir, fileNameMaster)\ndownload(dir, fileNameMaster, downloadDelimiter, location, AWS_ID, AWS_KEY, AWS_TOKEN, 1)",
+      "user": "anonymous",
+      "dateUpdated": "2021-01-25T10:45:18+0000",
+      "config": {
+        "editorSetting": {
+          "language": "scala",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12,
+        "editorMode": "ace/mode/scala",
+        "fontSize": 9,
+        "results": {},
+        "enabled": false,
+        "title": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "apps": [],
+      "runtimeInfos": {},
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1611569882886_-1892629011",
+      "id": "paragraph_1611524934438_1957263620",
+      "dateCreated": "2021-01-25T10:18:02+0000",
+      "status": "READY",
+      "$$hashKey": "object:60",
+      "title": "masterfile-translation.txt file and event / mentions / gkg zip files from the year 2020 -> Ernest's S3 bucket"
+    },
+    {
+      "text": "// Be carefull it runs for a while (enable run if willing to put all the files from masterfile.txt to a S3 bucket)\nval fileNameMaster = \"masterfilelist.txt\"\nval location = \"s3://majdalani-ernest-telecom-gdelt2020/eng\" // to modify if needed\nfileDownloader(\"http://data.gdeltproject.org/gdeltv2/\" + fileNameMaster, dir + fileNameMaster)\nputObject(AWS_ID, AWS_KEY, AWS_TOKEN, location, dir, fileNameMaster)\ndownload(dir, fileNameMaster, downloadDelimiter, location, AWS_ID, AWS_KEY, AWS_TOKEN, 0)",
+      "user": "anonymous",
+      "dateUpdated": "2021-01-25T10:45:57+0000",
+      "config": {
+        "editorSetting": {
+          "language": "scala",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12,
+        "editorMode": "ace/mode/scala",
+        "fontSize": 9,
+        "results": {},
+        "enabled": false,
+        "title": true,
+        "tableHide": false
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "apps": [],
+      "runtimeInfos": {},
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1611569882887_-752062948",
+      "id": "paragraph_1611524938336_-860495611",
+      "dateCreated": "2021-01-25T10:18:02+0000",
+      "status": "READY",
+      "$$hashKey": "object:61",
+      "title": "masterfile.txt file and event / mentions / gkg zip files from the year 2020 -> Ernest's S3 bucket"
+    }
+  ],
+  "name": "uploadDataToS3",
+  "id": "2FV695JYR",
+  "defaultInterpreterGroup": "spark",
+  "version": "0.9.0-preview1",
+  "noteParams": {},
+  "noteForms": {},
+  "angularObjects": {},
+  "config": {
+    "isZeppelinNotebookCronEnable": false,
+    "looknfeel": "default",
+    "personalizedMode": "false"
+  },
+  "info": {},
+  "path": "/uploadDataToS3"
+}
