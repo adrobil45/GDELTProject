@@ -118,7 +118,7 @@ See: [Notebook CassandraQueries](notebooks/CassandraQueries.zpln)
 
 #### Charts
 
-![Pie chart showing the distribution of the 1000 most mentionned events](images/q1.png)
+![Pie chart showing the distribution of the 1000 most mentioned events for the whole 2020 year](images/q1.png)
 *Pie chart showing the distribution of the 1000 most mentionned events*
 
 
