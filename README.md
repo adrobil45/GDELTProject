@@ -116,9 +116,15 @@ See: [Notebook S3toCassandra](notebooks/S3toCassandra.zpln)
 
 See: [Notebook CassandraQueries](notebooks/CassandraQueries.zpln)
 
-#### Graphs
+#### Charts
+
 ![Pie chart showing the distribution of the 1000 most mentionned events](images/q1.png)
+*Pie chart showing the distribution of the 1000 most mentionned events*
+
+
 ![Maximum number of articles for an event by month in the US](images/q2.png)
+*Maximum number of articles for an event by month in the US*
+
 
 ### Opening on "Do we observe a pattern that could identify another pandemic / pandemic wave ?"
 
