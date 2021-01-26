@@ -116,6 +116,10 @@ See: [Notebook S3toCassandra](notebooks/S3toCassandra.zpln)
 
 See: [Notebook CassandraQueries](notebooks/CassandraQueries.zpln)
 
+#### Graphs
+![Pie chart showing the distribution of the 1000 most mentionned events](images/q1.png)
+![Maximum number of articles for an event by month in the US](images/q2.png)
+
 ### Opening on "Do we observe a pattern that could identify another pandemic / pandemic wave ?"
 
 To see if we could identify a pattern, we take a look a the number of articles per day talking about the COVID-19 and the average tone of those articles per day. See below.
