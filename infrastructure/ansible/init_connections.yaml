@@ -1,0 +1,34 @@
+- name: Récupération des IP privées des workers
+  hosts: localhost
+  connection: local
+  tasks:
+    - name: Récupération de l'IP du master
+      shell: terraform output -state=../terraform/terraform.tfstate -json master_public_dns 
+      register: master_dns
+
+    - name: Récupération des IPs des workers et écriture dans la variable "slaves_private_ip"
+      shell: ssh -i ../terraform/ssh-keys/id_rsa_aws.pem hadoop@{{ master }} 'yarn node -list|sed -n "s/^\(ip[^:]*\):.*/\1/p"'
+      vars:
+        master: "{{ master_dns.stdout }}"
+      register: slaves_private_ip
+
+    - name: Copie de la clé privée sur le master
+      shell: scp -i ../terraform/ssh-keys/id_rsa_aws.pem ../terraform/ssh-keys/id_rsa_aws.pem hadoop@{{ master }}:~/id_rsa_aws.pem
+      vars:
+        master: "{{ master_dns.stdout }}"
+
+    - name: Initialisation de l'inventory des workers
+      shell: printf "[localhost]\nlocalhost\n[all_instances]\n" > workers_ip
+
+    - name: Récupération des IP publique des workers
+      shell: >
+        ssh -i ../terraform/ssh-keys/id_rsa_aws.pem hadoop@{{ master }}
+        ssh -i id_rsa_aws.pem -o StrictHostKeyChecking=no hadoop@{{ item }} 'curl ifconfig.co' >> workers_ip
+      vars:
+        master: "{{ master_dns.stdout }}"
+      with_items: "{{ slaves_private_ip.stdout_lines }}"
+
+    - name: Suppression de la clé privée sur le master
+      shell: ssh -i ../terraform/ssh-keys/id_rsa_aws.pem hadoop@{{ master }} 'rm id_rsa_aws.pem'
+      vars:
+        master: "{{ master_dns.stdout }}"

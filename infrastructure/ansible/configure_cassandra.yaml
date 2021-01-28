@@ -1,0 +1,83 @@
+# - name: Installation de Cassandra
+#   hosts: all_instances
+#   remote_user: hadoop
+#   vars:
+#     ansible_ssh_private_key_file: ../terraform/ssh-keys/id_rsa_aws.pem
+#   tasks:
+
+#     - name: Check si l'installation est déjà effectuée.
+#       stat:
+#         path: ~/apache-cassandra-3.11.9
+#       register: folder_details
+  
+#     - name: Copie du script d'installation de cassandra
+#       copy:
+#         src: installation/cassandra.sh
+#         dest: $HOME/cassandra.sh
+#       when: not folder_details.stat.exists
+
+#     - name: Installation
+#       shell: bash cassandra.sh
+#       when: not folder_details.stat.exists
+
+
+- name: Finalisation de l'installation
+  hosts: localhost
+  connection: local
+  tasks:
+    - name: Récupération de l'IP du master
+      shell: terraform output -state=../terraform/terraform.tfstate -json master_public_dns 
+      register: master_dns
+
+    - name: Récupération des IPs privées des workers
+      shell: ssh -i ../terraform/ssh-keys/id_rsa_aws.pem hadoop@{{ master }} 'yarn node -list| sed -n "s/^\(ip[^:]*\):.*/\1/p" | grep -Eo "([0-9]{1,3}-){3}[0-9]{1,3}" | sed "s/-/./g"' 
+      vars:
+        master: "{{ master_dns.stdout }}"
+      register: private_ip
+
+    - name: Récupération des IP publiques
+      shell: cut workers_ip -d] -f2 | sed '1d;2d;3d' 
+      register: public_ip
+
+    - name: Création d'un dictionnaire de matching des IP
+      set_fact:
+        ip: "{{ ip | default({}) | combine({item[0]: item[1]}) }}"
+      loop: "{{ (keys | zip(values)) | list }}"
+      vars:
+        keys: "{{ private_ip.stdout_lines }}"
+        values: "{{ public_ip.stdout_lines }}"
+
+    - name: Création de dossiers pour chacune des IP
+      shell: mkdir files/{{ item }}
+      with_items: "{{ public_ip.stdout_lines }}"
+      ignore_errors: yes
+ 
+    - name: Templating des configs Cassandra
+      template:
+        src: "files/cassandra.yaml.j2"
+        dest: "files/{{ item.value }}/cassandra.yaml"
+      vars: 
+        cluster_name: Cassandra cluster
+        seeds_ips: "{{ ip.keys() |list | join(',') }}"
+        rpc_address: "{{ item.key }}"
+        listen_address: "{{ item.key }}"
+      with_dict: "{{ ip }}"
+
+    - name: Copie des properties
+      shell: >
+        ssh -i ../terraform/ssh-keys/id_rsa_aws.pem -o StrictHostKeyChecking=no hadoop@{{ item.value }} "rm /home/hadoop/apache-cassandra-3.11.9/conf/cassandra-rackdc.properties"; 
+        scp -i ../terraform/ssh-keys/id_rsa_aws.pem -o StrictHostKeyChecking=no files/cassandra-rackdc.properties hadoop@{{ item.value }}:/home/hadoop/apache-cassandra-3.11.9/conf/
+      with_dict: "{{ ip }}"
+
+    - name: Copie de Cassandra.yaml
+      shell: >
+        ssh -i ../terraform/ssh-keys/id_rsa_aws.pem -o StrictHostKeyChecking=no hadoop@{{ item.value }} "rm /home/hadoop/apache-cassandra-3.11.9/conf/cassandra.yaml";
+        scp -i ../terraform/ssh-keys/id_rsa_aws.pem -o StrictHostKeyChecking=no files/{{ item.value }}/cassandra.yaml hadoop@{{ item.value }}:/home/hadoop/apache-cassandra-3.11.9/conf/
+      with_dict: "{{ ip }}"
+
+    - name: Clean des dossiers en local
+      shell: rm -rf files/{{ item.value }}
+      with_dict: "{{ ip }}"
+
+
+

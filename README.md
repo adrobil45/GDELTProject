@@ -26,9 +26,40 @@ In this project we aim to answer the following :
 ![Architecture](images/Architecture.png)
 
 ## Setting up the environment
+
+### Requirements:
+- Terraform
+- Ansible
+
 ### Deployment of resources on AWS
-+ #### Terraform
-+ #### Ansible
+In order to deploy easily our Cassandra ring, we decided to create scripts that allowed us to automate all the configurations needed on our virtual machines. You will find below the instructions on how to use it:
+
+1) Get your AWS credentials (*aws_access_key_id*, *aws_secret_access_key*, *aws_session_token*) and write it into [terraform.tfvars](infrastructure/terraform/terraform.tfvars).
+
+2) Enter into the **terraform** folder and run the command below:
+```
+> terraform init
+> terraform apply
+```
+Then type "yes" and the deployment of your infrastructure should start.
+
+3) Once the precedent step is finished, enter into the **ansible** folder an run:
+```
+> ansible-playbook init_connections.yaml
+> ansible-playbook -i workers_ip configure_cassandra.yaml
+```
+At the end of this operation, your cluster should be ready.
+
+4) You have to launch on each worker the Cassandra start program:
+```
+> ssh -i <path-to-ssh-keys> hadoop@<public-ip>
+> ./apache.../bin/cassandra
+```
+Note: 
+- Use the [provided private key](infrastructure/terraform/ssh-keys/id_rsa_aws.pem)
+- You can find th public ip in the file [workers_ip](infrastructure/ansible/workers_ip)
+- To destroy everything launch: ``` terraform destroy ```
+
 
 ## Data Preparation
 ### Cassandra Tables
